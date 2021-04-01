@@ -29,21 +29,15 @@ use common\models\AuthAssign;
                     </li>
 
                     <li>
-                        <a href="<?php echo Url::toRoute(['/data-mahasiswa']) ?>">
-                            <i class="mdi mdi-account-multiple-outline"></i>
-                            Mahasiswa
-                        </a>
-                    </li>
-                    <li>
                         <a href="<?php echo Url::toRoute(['/data-kriteria']) ?>">
                             <i class="mdi mdi-receipt"></i>
                             Kriteria
                         </a>
                     </li>
                     <li>
-                        <a href="<?php echo Url::toRoute(['/data-subkriteria']) ?>">
-                            <i class="mdi mdi-web"></i>
-                            Subkriteria
+                        <a href="<?php echo Url::toRoute(['/data-mahasiswa']) ?>">
+                            <i class="mdi mdi-account-multiple-outline"></i>
+                            Mahasiswa
                         </a>
                     </li>
                     <li class="has-submenu">

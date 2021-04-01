@@ -3,17 +3,20 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
-use kartik\file\FileInput;
 
 /* @var $this yii\web\View */
-/* @var $model common\models\NilaiAwal */
+/* @var $searchModel frontend\models\AnalisaMahasiswaSearch */
+/* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Import Data Konversi Nilai';
+$this->title = 'Analisa Mahasiswa';
+
+$jk = Yii::$app->request->get('jk');
 
 $uHome = Url::base(true);
-$uIndex = Url::toRoute(['index', 'jk' => Yii::$app->request->get('jk')]);
-
+$uMahasiswa = Url::to(['/data-mahasiswa/index']);
+$uImport = Url::toRoute(['import', 'jk' => Yii::$app->request->get('jk')]);
 $uBack = Yii::$app->request->referrer ?: $uHome;
+
 $this->params['header-block'] = <<< HTML
 <div class="container-fluid">
     <div class="row">
@@ -21,14 +24,13 @@ $this->params['header-block'] = <<< HTML
             <div class="page-title-box">
                 <div class="row align-items-center">
                     <div class="col-sm-9">
-                        <h4 class="page-title">Form {$this->title}</h4>
+                        <h4 class="page-title">{$this->title}</h4>
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="{$uHome}"><i class="mdi mdi-home-outline"></i></a></li>
-                            <li class="breadcrumb-item"><a href="{$uIndex}">Data Konversi</a></li>
+                            <li class="breadcrumb-item"><a href="{$uMahasiswa}">Data Mahasiswa</a></li>
                             <li class="breadcrumb-item active">{$this->title}</li>
                         </ol>
                     </div>
-
                     <div class="col-sm-3">
                         <div class="float-right d-none d-md-block">
                             <a href="{$uBack}" class="btn btn-secondary">
@@ -45,30 +47,15 @@ $this->params['header-block'] = <<< HTML
 </div>
 HTML;
 ?>
-
 <div class="row">
     <div class="col-12">
         <div class="card">
+
+
             <div class="card-body">
-
-              <?php $form = ActiveForm::begin(); ?>
-
-              <div class="col-md-12">
-                  <?php echo $form->field($model, 'filecsv')->widget(FileInput::classname(), [
-                      'options' => ['accept' => 'application/csv'],
-                      'pluginOptions' => [
-                          'showPreview' => true,
-                          'showCaption' => false,
-                          'showRemove' => true,
-                          'showUpload' => true,
-                          'initialPreviewAsData' => true,
-                          'initialPreviewFileType' => 'pdf',
-                      ]
-                  ]); ?>
-              </div>
-
-              <?php ActiveForm::end(); ?>
-
+              <?= Html::a('Import Nilai Mahasiswa', ['import'], ['class' => 'btn btn-success']) ?>
+              <?= Html::a('Mulai Analisa', ['analisa'], ['class' => 'btn btn-success']) ?>
+              <?= Html::a('Ranking', ['rangking'], ['class' => 'btn btn-success']) ?>
             </div>
         </div>
     </div>

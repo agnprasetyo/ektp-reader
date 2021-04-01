@@ -69,6 +69,58 @@ HTML;
                         <?php } ?>
                       </tr>
                   </thead>
+
+                  <tbody>
+                    <?php foreach ($dataMahasiswa as $baris) { ?>
+                      <tr>
+                        <th class="active"><?= $baris['nama'] ?></th>
+                        <?php foreach ($dataKriteria as $kolom) { ?>
+                          <td>
+          									<?php
+                              $skor = $getSkor($baris['id'], $kolom['id_kriteria']);
+          										echo number_format($skor['nilai'], 4, '.', ',');
+          									?>
+          								</td>
+                        <?php } ?>
+            					</tr>
+                    <?php } ?>
+                  </tbody>
+                  <tfoot>
+                    <tr class="info">
+                      <th>Maksimal</th>
+                      <?php foreach ($dataKriteria as $kriteria) { ?>
+                        <th>
+                          <?php
+                          $max = $nilai($kriteria['id_kriteria']);
+                          echo number_format($max['largest'], 4, '.', ',');
+                          ?>
+                        </th>
+                      <?php } ?>
+                    </tr>
+                    <tr class="info">
+                      <th>Minimal</th>
+                      <?php foreach ($dataKriteria as $kriteria) { ?>
+                        <th>
+                          <?php
+                          $min = $nilai($kriteria['id_kriteria']);
+                          echo number_format($min['smallest'], 4, '.', ',');
+                          ?>
+                        </th>
+                      <?php } ?>
+                    </tr>
+                  </tfoot>
+                </table>
+
+                <br/>
+                <table width="100%" class="table table-striped table-bordered">
+                  <thead>
+                      <tr>
+                        <th class="text-center active">Alternatif</th>
+                        <?php foreach ($dataKriteria as $kriteria) { ?>
+                        <th class="text-center">Kriteria <?=$kriteria['nama_kriteria']?></th>
+                        <?php } ?>
+                      </tr>
+                  </thead>
                   <tbody>
                     <?php foreach ($dataMahasiswa as $baris) { ?>
                       <tr>
@@ -92,37 +144,6 @@ HTML;
                     <?php } ?>
                   </tbody>
                 </table>
-
-                </br>
-                <table width="100%" class="table table-striped table-bordered">
-                  <thead>
-                      <tr>
-                        <th class="text-center active">Alternatif</th>
-                        <?php foreach ($dataKriteria as $kriteria) { ?>
-                        <th class="text-center">Kriteria <?=$kriteria['nama_kriteria']?></th>
-                        <?php } ?>
-                      </tr>
-                  </thead>
-
-                  <tbody>
-                    <?php foreach ($dataMahasiswa as $baris) { ?>
-                      <tr>
-                        <th class="active"><?= $baris['nama'] ?></th>
-                        <?php foreach ($dataKriteria as $kolom) { ?>
-                          <td>
-          									<?php
-                              $bobot = $getSkor($baris['id'], $kolom['id_kriteria']);
-                              $hasil = $bobot['bobot'] * $kolom['bobot_kriteria'];
-                              echo number_format($hasil, 4, '.', ',');
-                              $normalisasi = $inputNormalisasi($hasil, $baris['id'], $kolom['id_kriteria']);
-          									?>
-          								</td>
-                        <?php } ?>
-            					</tr>
-                    <?php } ?>
-                  </tbody>
-                </table>
-
 
           </div>
       </div>

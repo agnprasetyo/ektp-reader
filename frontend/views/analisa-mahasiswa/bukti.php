@@ -64,65 +64,28 @@ HTML;
                   <thead>
                       <tr>
                         <th class="text-center active">Alternatif</th>
-                        <?php foreach ($dataKriteria as $kriteria) { ?>
-                        <th class="text-center">Kriteria <?=$kriteria['nama_kriteria']?></th>
-                        <?php } ?>
+                        <th class="text-center active">Bobot V = 0.5</th>
+                        <th class="text-center active">Peringkat</th>
+                        <th class="text-center active">Bobot V = 0.44</th>
+                        <th class="text-center active">Peringkat</th>
+                        <th class="text-center active">Bobot V = 0.56</th>
+                        <th class="text-center active">Peringkat</th>
                       </tr>
                   </thead>
                   <tbody>
-                    <?php foreach ($dataMahasiswa as $baris) { ?>
+                    <?php $ranking1 = 1; $ranking2 = 1; $ranking3 = 1; foreach ($dataMahasiswa as $baris) { ?>
                       <tr>
-                        <th class="active"><?= $baris['nama'] ?></th>
-                        <?php foreach ($dataKriteria as $kolom) { ?>
-                          <td>
-          									<?php
-                              $max = $nilai($kolom['id_kriteria']);
-                              $min = $nilai($kolom['id_kriteria']);
-
-                              $skor = $getSkor($baris['id'], $kolom['id_kriteria']);
-                              // echo number_format($skor['nilai'], 4, '.', ',');
-
-                              $normal = ($max['largest']-$skor['nilai'])/($max['largest']-$min['smallest']);
-                              echo number_format($normal, 4, '.', ',');
-                              $bobot = $inputBobot($normal, $baris['id'], $kolom['id_kriteria']);
-          									?>
-          								</td>
-                        <?php } ?>
+                        <td class="active"><?= $baris['nama'] ?></td>
+                        <td class="active"><?php echo number_format($baris['qi'], 4, '.', ','); ?></td>
+                        <td class="bg-primary text-white text-center"><?=$ranking1++?></td>
+                        <td class="active"><?php echo number_format($baris['qii'], 4, '.', ','); ?></td>
+                        <td class="bg-primary text-white text-center"><?=$ranking2++?></td>
+                        <td class="active"><?php echo number_format($baris['qiii'], 4, '.', ','); ?>
+                        <td class="bg-primary text-white text-center"><?=$ranking3++?></td>
             					</tr>
                     <?php } ?>
                   </tbody>
                 </table>
-
-                </br>
-                <table width="100%" class="table table-striped table-bordered">
-                  <thead>
-                      <tr>
-                        <th class="text-center active">Alternatif</th>
-                        <?php foreach ($dataKriteria as $kriteria) { ?>
-                        <th class="text-center">Kriteria <?=$kriteria['nama_kriteria']?></th>
-                        <?php } ?>
-                      </tr>
-                  </thead>
-
-                  <tbody>
-                    <?php foreach ($dataMahasiswa as $baris) { ?>
-                      <tr>
-                        <th class="active"><?= $baris['nama'] ?></th>
-                        <?php foreach ($dataKriteria as $kolom) { ?>
-                          <td>
-          									<?php
-                              $bobot = $getSkor($baris['id'], $kolom['id_kriteria']);
-                              $hasil = $bobot['bobot'] * $kolom['bobot_kriteria'];
-                              echo number_format($hasil, 4, '.', ',');
-                              $normalisasi = $inputNormalisasi($hasil, $baris['id'], $kolom['id_kriteria']);
-          									?>
-          								</td>
-                        <?php } ?>
-            					</tr>
-                    <?php } ?>
-                  </tbody>
-                </table>
-
 
           </div>
       </div>

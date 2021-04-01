@@ -8,7 +8,7 @@ use kartik\file\FileInput;
 /* @var $this yii\web\View */
 /* @var $model common\models\NilaiAwal */
 
-$this->title = 'Import Data Konversi Nilai';
+$this->title = 'Import Nilai Mahasiswa';
 
 $uHome = Url::base(true);
 $uIndex = Url::toRoute(['index', 'jk' => Yii::$app->request->get('jk')]);
@@ -24,7 +24,7 @@ $this->params['header-block'] = <<< HTML
                         <h4 class="page-title">Form {$this->title}</h4>
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="{$uHome}"><i class="mdi mdi-home-outline"></i></a></li>
-                            <li class="breadcrumb-item"><a href="{$uIndex}">Data Konversi</a></li>
+                            <li class="breadcrumb-item"><a href="{$uIndex}">Data Mahasiswa</a></li>
                             <li class="breadcrumb-item active">{$this->title}</li>
                         </ol>
                     </div>
@@ -54,7 +54,9 @@ HTML;
               <?php $form = ActiveForm::begin(); ?>
 
               <div class="col-md-12">
-                  <?php echo $form->field($model, 'filecsv')->widget(FileInput::classname(), [
+                  <?php
+                  // echo '<label class="control-label">Select Document</label>';
+                  echo $form->field($model, 'filecsv')->widget(FileInput::classname(), [
                       'options' => ['accept' => 'application/csv'],
                       'pluginOptions' => [
                           'showPreview' => true,
@@ -64,7 +66,8 @@ HTML;
                           'initialPreviewAsData' => true,
                           'initialPreviewFileType' => 'pdf',
                       ]
-                  ]); ?>
+                  ]);
+                  ?>
               </div>
 
               <?php ActiveForm::end(); ?>

@@ -11,7 +11,8 @@ use Yii;
  * @property string $id_alternatif
  * @property string $id_kriteria
  * @property string $nilai
- * @property float $bobot_alternatif
+ * @property float $bobot
+ * @property float $normalisasi
  *
  * @property DataMahasiswa $mahasiswa
  * @property DataKriteria $kriteria
@@ -32,8 +33,8 @@ class AnalisaAlternatif extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_alternatif', 'id_kriteria', 'nilai', 'bobot_alternatif'], 'required'],
-            [['bobot_alternatif'], 'number'],
+            [['id_alternatif', 'id_kriteria', 'nilai', 'bobot'], 'required'],
+            [['nilai', 'bobot'], 'number'],
             [['id_alternatif'], 'string', 'max' => 4],
             [['id_kriteria'], 'string', 'max' => 2],
             [['id_alternatif'], 'exist', 'skipOnError' => true, 'targetClass' => DataMahasiswa::className(), 'targetAttribute' => ['id_alternatif' => 'id']],
@@ -51,7 +52,8 @@ class AnalisaAlternatif extends \yii\db\ActiveRecord
             'id_alternatif' => 'Id Alternatif',
             'id_kriteria' => 'Id Kriteria',
             'nilai' => 'Nilai',
-            'bobot_alternatif' => 'Bobot Alternatif',
+            'bobot' => 'Bobot',
+            'normalisasi' => 'Normalisasi',
         ];
     }
 

@@ -47,19 +47,30 @@ class Import extends \yii\base\Model
       $listidkriteria = [];
       $konversi = [];
 
-
-      for ($a = 1; $a < count($attr); $a++) {
+      foreach($attr as $key => $value) {
         $datakriteria = DataKriteria::find()
-                      ->where(['nama_kriteria' => $attr[$a]])
+                      ->where(['nama_kriteria' => trim($value) ])
                       ->one();
 
-        $listidkriteria[$attr[$a]] = $datakriteria->id_kriteria;
+        if ($datakriteria != null) {
+          echo $value . '<br>';
+          $listidkriteria[$value] = $datakriteria->id_kriteria;
+        } else {
+          unset($attr[$key]);
+        }
       }
 
+      $attr = array_values($attr);
+      // print_r($attr);
+      // print_r($listidkriteria);exit;
+
       foreach($listData as $data) {
-        for($i = 1; $i < count($attr); $i++) {
+        for($i = 0; $i < count($attr); $i++) {
           $nama_kriteria = $attr[$i];
           $nilai_kriteria = $data[$nama_kriteria];
+
+
+          // print_r($nama_kriteria);exit;
 
           if( !isset( $konversi[$nama_kriteria][$nilai_kriteria] ) ) {
             $datakonversi = KonversiNilai::find()
@@ -75,18 +86,32 @@ class Import extends \yii\base\Model
             }
           }
 
-          $model = new AnalisaAlternatif;
+          $searchdata = AnalisaAlternatif::findOne([
+            'id_alternatif' => $data['id_mahasiswa'],
+            'id_kriteria' => $listidkriteria[$nama_kriteria]
+          ]);
 
-          $model->id_alternatif = $data['id_mahasiswa'];
-          $model->id_kriteria = $listidkriteria[$nama_kriteria];
-          if(isset($konversi[$nama_kriteria][$nilai_kriteria])) {
-            $model->nilai = $konversi[$nama_kriteria][$nilai_kriteria];
+          if ($searchdata == null) {
+            $model = new AnalisaAlternatif;
+
+            $model->id_alternatif = $data['id_mahasiswa'];
+            $model->id_kriteria = $listidkriteria[$nama_kriteria];
+            if(isset($konversi[$nama_kriteria][$nilai_kriteria])) {
+              $model->nilai = $konversi[$nama_kriteria][$nilai_kriteria];
+            } else {
+              $model->nilai = null;
+            }
+            $model->bobot = 0;
+            $model->normalisasi = 0;
+            $model->save();
           } else {
-            $model->nilai = null;
+            $searchdata->updateAttributes([
+              'nilai' => $konversi[$nama_kriteria][$nilai_kriteria],
+              'bobot' => 0,
+              'normalisasi' => 0
+            ]);
           }
-          $model->bobot_alternatif = 0;
 
-          $model->save();
 
         }
       }

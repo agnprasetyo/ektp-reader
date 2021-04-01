@@ -14,7 +14,7 @@ $jk = Yii::$app->request->get('jk');
 
 $uHome = Url::base(true);
 $uAnalisa = Url::to(['/analisa-mahasiswa/index']);
-$uImport = Url::to(['/analisa-mahasiswa/import']);
+$uImport = Url::to(['/data-mahasiswa/import']);
 
 $this->params['header-block'] = <<< HTML
 <div class="container-fluid">
@@ -22,14 +22,14 @@ $this->params['header-block'] = <<< HTML
         <div class="col-12">
             <div class="page-title-box">
                 <div class="row align-items-center">
-                    <div class="col-sm-8">
+                    <div class="col-sm-6">
                         <h4 class="page-title">{$this->title}</h4>
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="{$uHome}"><i class="mdi mdi-home-outline"></i></a></li>
                             <li class="breadcrumb-item active">{$this->title}</li>
                         </ol>
                     </div>
-                    <div class="col-sm-4">
+                    <div class="col-sm-6">
                         <div class="float-right d-none d-md-block" style="margin: 3px;">
                             <a href="{$uAnalisa}" class="btn btn-primary">
                                 Analisa Mahasiswa
@@ -39,7 +39,7 @@ $this->params['header-block'] = <<< HTML
                         <div class="float-right d-none d-md-block" style="margin: 3px;">
                             <a href="{$uImport}" class="btn btn-warning">
                                 <i class="mdi mdi-plus mr-2"></i>
-                                Import Nilai
+                                Import Data Mahasiswa
                             </a>
                         </div>
                     </div> <!-- end col-->

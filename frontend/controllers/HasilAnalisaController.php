@@ -3,50 +3,39 @@
 namespace frontend\controllers;
 
 use Yii;
-use common\models\DataMahasiswa;
-use common\models\import\ImportMahasiswa;
-use frontend\models\DataMahasiswaSearch;
+use common\models\HasilAnalisa;
+use frontend\models\HasilAnalisaSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use yii\filters\AccessControl;
 
 /**
- * DataMahasiswaController implements the CRUD actions for DataMahasiswa model.
+ * HasilAnalisaController implements the CRUD actions for HasilAnalisa model.
  */
-
-class DataMahasiswaController extends Controller
+class HasilAnalisaController extends Controller
 {
     /**
      * {@inheritdoc}
      */
-     public function behaviors()
-     {
-         return [
-           'access' => [
-               'class' => AccessControl::className(),
-               'rules' => [
-                   [
-                       'allow' => Yii::$app->assign->isAdministrator(),
-                   ],
-               ],
-             ],
-             'verbs' => [
-                 'class' => VerbFilter::className(),
-                 'actions' => [
-                     'delete' => ['POST'],
-                 ],
-             ],
-         ];
-     }
+    public function behaviors()
+    {
+        return [
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['POST'],
+                ],
+            ],
+        ];
+    }
 
     /**
-     * Lists all DataMahasiswa models.
+     * Lists all HasilAnalisa models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new DataMahasiswaSearch();
+        $searchModel = new HasilAnalisaSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -56,7 +45,7 @@ class DataMahasiswaController extends Controller
     }
 
     /**
-     * Displays a single DataMahasiswa model.
+     * Displays a single HasilAnalisa model.
      * @param string $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
@@ -68,48 +57,26 @@ class DataMahasiswaController extends Controller
         ]);
     }
 
-    //import data mahasiswa
-    public function actionImport()
-    {
-        $request = Yii::$app->request;
-        $model = new ImportMahasiswa();
-        if ($request->isPost) {
-          if ($model->load($request->post())) {
-            if ($model->save()) {
-              return $this->redirect(['index']);
-            }
-          }
-        }
-
-
-        return $this->render('import', [
-            'model' => $model,
-        ]);
-    }
-
     /**
-     * Creates a new DataMahasiswa model.
+     * Creates a new HasilAnalisa model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new DataMahasiswa();
+        $model = new HasilAnalisa();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
-        // $tools = Yii::$app->user->identity->tools;
-
         return $this->render('create', [
             'model' => $model,
-            // 'port' => $tools->port,
         ]);
     }
 
     /**
-     * Updates an existing DataMahasiswa model.
+     * Updates an existing HasilAnalisa model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param string $id
      * @return mixed
@@ -129,7 +96,7 @@ class DataMahasiswaController extends Controller
     }
 
     /**
-     * Deletes an existing DataMahasiswa model.
+     * Deletes an existing HasilAnalisa model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param string $id
      * @return mixed
@@ -142,25 +109,16 @@ class DataMahasiswaController extends Controller
         return $this->redirect(['index']);
     }
 
-    public function actionReader()
-    {
-        $tools = Yii::$app->user->identity->tools;
-
-        return $this->render('reader', [
-            'tools' => $tools,
-        ]);
-    }
-
     /**
-     * Finds the DataMahasiswa model based on its primary key value.
+     * Finds the HasilAnalisa model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param string $id
-     * @return DataMahasiswa the loaded model
+     * @return HasilAnalisa the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = DataMahasiswa::findOne($id)) !== null) {
+        if (($model = HasilAnalisa::findOne($id)) !== null) {
             return $model;
         }
 

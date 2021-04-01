@@ -6,7 +6,7 @@ use Yii;
 use common\models\AnalisaAlternatif;
 use common\models\DataKriteria;
 use common\models\DataMahasiswa;
-// use common\models\HasilAnalisa;
+use common\models\HasilAnalisa;
 use common\models\import\Import;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -81,17 +81,12 @@ class AnalisaMahasiswaController extends Controller
           return $this->inputBobot($a, $b, $c);
         };
 
-        $inputNormalisasi = function($a, $b, $c) {
-          return $this->inputNormalisasi($a, $b, $c);
-        };
-
         return $this->render('analisa', [
             'dataKriteria' => $dataKriteria,
             'dataMahasiswa' => $dataMahasiswa,
             'inputBobot' => $inputBobot,
             'getSkor' => $getSkor,
             'nilai' => $nilai,
-            'inputNormalisasi' => $inputNormalisasi,
         ]);
     }
 
@@ -132,8 +127,8 @@ class AnalisaMahasiswaController extends Controller
     }
 
 
-    //Menghitung indeks VIKOR
-    public function actionHitung()
+    //perangkingan
+    public function actionRangking()
     {
       $dataMahasiswa = DataMahasiswa::find()
               ->orderBy(['id' => SORT_ASC])
@@ -164,6 +159,10 @@ class AnalisaMahasiswaController extends Controller
         return $this->regret();
       };
 
+      $inputNormalisasi = function($a, $b, $c) {
+        return $this->inputNormalisasi($a, $b, $c);
+      };
+
       $inputSi = function($a, $b) {
         return $this->inputSi($a, $b);
       };
@@ -174,7 +173,7 @@ class AnalisaMahasiswaController extends Controller
         return $this->inputQi($a, $b, $c, $d);
       };
 
-      return $this->render('hitung', [
+      return $this->render('rangking', [
           'dataMahasiswa' => $dataMahasiswa,
           'dataKriteria' => $dataKriteria,
           'jumlah' => $jumlah,
@@ -183,6 +182,7 @@ class AnalisaMahasiswaController extends Controller
           'utility' => $utility,
           'regret' => $regret,
 
+          'inputNormalisasi' => $inputNormalisasi,
           'inputSi' => $inputSi,
           'inputRi' => $inputRi,
           'inputQi' => $inputQi,
@@ -216,10 +216,10 @@ class AnalisaMahasiswaController extends Controller
 
     public function utility()
     {
-      $utility = DataMahasiswa::find()
+      $utility = HasilAnalisa::find()
                 ->select([
-                  'largest' => 'max(si)',
-                  'smallest' => 'min(si)'
+                  'largest' => 'max(Si)',
+                  'smallest' => 'min(Si)'
                 ])
                 // ->where(['id_alternatif' => $a])
                 ->asArray()
@@ -230,10 +230,10 @@ class AnalisaMahasiswaController extends Controller
 
     public function regret()
     {
-      $utility = DataMahasiswa::find()
+      $utility = HasilAnalisa::find()
                 ->select([
-                  'largest' => 'max(ri)',
-                  'smallest' => 'min(ri)'
+                  'largest' => 'max(Ri)',
+                  'smallest' => 'min(Ri)'
                 ])
                 // ->where(['id_alternatif' => $a])
                 ->asArray()
@@ -254,64 +254,32 @@ class AnalisaMahasiswaController extends Controller
     //update hasil
     public function inputSi($a, $b)
     {
-      $model = DataMahasiswa::findOne(['id' => $b]);
+      $model = HasilAnalisa::findOne(['id_alternatif' => $b]);
       // if($model == null) {
       //   var_dump($b);exit;
       // }
-      $model->updateAttributes(['si' => $a]);
+      $model->updateAttributes(['Si' => $a]);
 
       return $model;
     }
 
     public function inputRi($a, $b)
     {
-      $model = DataMahasiswa::findOne(['id' => $b]);
-      $model->updateAttributes(['ri' => $a]);
+      $model = HasilAnalisa::findOne(['id_alternatif' => $b]);
+      $model->updateAttributes(['Ri' => $a]);
 
       return $model;
     }
 
     public function inputQi($a, $b, $c, $d)
     {
-      $model = DataMahasiswa::findOne(['id' => $d]);
-      $model->updateAttributes(['qi' => $a]);
-      $model->updateAttributes(['qii' => $b]);
-      $model->updateAttributes(['qiii' => $c]);
+      $model = HasilAnalisa::findOne(['id_alternatif' => $d]);
+      $model->updateAttributes(['Qi' => $a]);
+      $model->updateAttributes(['Qii' => $b]);
+      $model->updateAttributes(['Qiii' => $c]);
 
       return $model;
     }
-
-    public function actionRangking()
-    {
-      $dataMahasiswa = DataMahasiswa::find()
-              ->orderBy(['qi' => SORT_ASC])
-              ->asArray()
-              ->all();
-
-      return $this->render('rangking', [
-        'dataMahasiswa' => $dataMahasiswa,
-
-      ]);
-    }
-
-    public function actionBukti()
-    {
-      $dataMahasiswa = DataMahasiswa::find()
-              ->orderBy([
-                          'qi'   => SORT_ASC,
-                          'qii'  => SORT_ASC,
-                          'qiii' => SORT_ASC,
-                        ])
-              ->asArray()
-              ->all();
-      // $dataMahasiswa = DataMahasiswa::find(['qi' => SORT_ASC])->all();
-
-      return $this->render('bukti', [
-        'dataMahasiswa' => $dataMahasiswa,
-
-      ]);
-    }
-
 
     //import detail mahasiswa (data kriteria)
     public function actionImport()

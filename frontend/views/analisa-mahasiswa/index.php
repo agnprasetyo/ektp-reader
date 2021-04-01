@@ -50,26 +50,14 @@ HTML;
 <div class="row">
     <div class="col-12">
         <div class="card">
-            <div class="card-body">
-              <form method="post" action="<?= Url::to(['analisa']) ?>">
-                <div class="form-group">
-                  <label>Kriteria</label>
-                  <select class="form-control" name="id_kriteria">
-                    <?php foreach ($dataKriteria as $value) { ?>
-                      <option value="<?= $value['id_kriteria'] ?>"><?= $value['nama_kriteria'] ?></option>
-                    <?php } ?>
-                  </select>
-                </div>
 
-                <div class="form-group">
-                  <button type="submit" class="btn btn-success">Analisa</button>
-                </div>
-              </form>
-
-            </div>
 
             <div class="card-body">
-              <?= Html::a('Ranking', ['rangking'], ['class' => 'btn btn-success']) ?>
+              <?= Html::a('Import Nilai Mahasiswa', ['import'], ['class' => 'btn btn-success']) ?>
+              <?= Html::a('Mulai Analisa', ['analisa'], ['class' => 'btn btn-success']) ?>
+              <?= Html::a('Hitung Indeks', ['hitung'], ['class' => 'btn btn-success']) ?>
+              <?= Html::a('Perangkingan', ['rangking'], ['class' => 'btn btn-success']) ?>
+              <?= Html::a('Pembuktian', ['bukti'], ['class' => 'btn btn-success']) ?>
             </div>
         </div>
     </div>

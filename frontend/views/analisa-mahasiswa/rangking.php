@@ -3,7 +3,6 @@
 use yii\helpers\Url;
 
 /* @var $this yii\web\View */
-/* @var $model common\models\AnalisaAlternatif */
 
 \yii\web\YiiAsset::register($this);
 
@@ -61,27 +60,21 @@ HTML;
         				</div>
         			</div>
                 <br/>
-
                 <table width="100%" class="table table-striped table-bordered">
                   <thead>
-                    <tr>
-                      <th class="text-center active">Alternatif</th>
-                      <th>Hasil</th>
-                    </tr>
-
+                      <tr>
+                        <th class="text-center active">Alternatif</th>
+                        <th class="text-center active">Bobot</th>
+                        <th class="text-center active">Peringkat</th>
+                      </tr>
                   </thead>
                   <tbody>
-                    <?php foreach ($dataMahasiswa as $baris) { ?>
-                      <?php $baris->updateAttributes([
-                        'hasil_akhir' => $rangking[$baris['id']]
-                      ]); ?>
+                    <?php $ranking = 1; foreach ($dataMahasiswa as $baris) { ?>
                       <tr>
-                        <th class="active"><?=$baris['nama']?></th>
-                        <th class="active">
-                        <?php echo number_format($baris['hasil_akhir'], 4, '.', ','); ?>
-                        </th>
-                        <th class="active"> </th>
-                      </tr>
+                        <td class="active"><?= $baris['nama'] ?></td>
+                        <td class="active"><?= $baris['qi'] ?></td>
+                        <td class="bg-primary text-white text-center"><?=$ranking++?></td>
+            					</tr>
                     <?php } ?>
                   </tbody>
                 </table>

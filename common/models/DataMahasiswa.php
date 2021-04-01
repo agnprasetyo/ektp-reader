@@ -5,30 +5,27 @@ namespace common\models;
 use Yii;
 
 /**
- * This is the model class for table "data_alternatif".
+ * This is the model class for table "data_mahasiswa".
  *
  * @property int $id
- * @property int $nik
- * @property string $nama
- * @property string $alamat
- * @property string $jenis_kelamin
- * @property string $tempat_lahir
- * @property string $tanggal_lahir
- * @property string $agama
- * @property string $status
- * @property string $pekerjaan
- * @property string $berlaku_hingga
- * @property string $nim
- * @property string $jenjang
- * @property string $jurusan
- * @property string $fakultas
- * @property string $status_mhs
+ * @property string $nik
+ * @property string|null $nama
+ * @property string|null $alamat
+ * @property string|null $jenis_kelamin
+ * @property string|null $tempat_lahir
+ * @property string|null $tanggal_lahir
+ * @property string|null $agama
+ * @property string|null $status
+ * @property string|null $pekerjaan
+ * @property string|null $berlaku_hingga
+ * @property string|null $nim
+ * @property string|null $jenjang
+ * @property string|null $jurusan
+ * @property string|null $fakultas
+ * @property string|null $status_mhs
  *
  * @property AnalisaAlternatif[] $analisaAlternatifs
- * @property AnalisaAlternatif[] $analisaAlternatifs0
- * @property JumAltKri[] $jumAltKris
- * @property DataKriteria[] $kriterias
- * @property NilaiAwal[] $nilaiAwals
+ * @property HasilAnalisa[] $hasilAnalisas
  */
 class DataMahasiswa extends \yii\db\ActiveRecord
 {
@@ -46,8 +43,9 @@ class DataMahasiswa extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'nik'], 'required'],
-            [['id', 'nik'], 'integer'],
+            [['nama', 'nik'], 'required'],
+            [['id'], 'integer'],
+            [['nik'], 'string', 'max' => 16],
             [['nama', 'alamat', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'agama', 'status', 'pekerjaan', 'berlaku_hingga', 'nim', 'jenjang', 'jurusan', 'fakultas', 'status_mhs'], 'string', 'max' => 255],
             [['id'], 'unique'],
         ];
@@ -78,21 +76,6 @@ class DataMahasiswa extends \yii\db\ActiveRecord
         ];
     }
 
-    // public static function getNewId() {
-    //     $lastModel = self::find()
-    //                 ->select(['id'])
-    //                 ->orderBy(['id' => SORT_DESC])
-    //                 ->one();
-    //
-    //     if($lastModel != null) {
-    //         $lastId = explode('A', $lastModel->id);
-    //
-    //         return 'A' . ($lastId[1] + 1);
-    //     } else {
-    //         return 'A1';
-    //     }
-    // }
-
     /**
      * Gets query for [[AnalisaAlternatifs]].
      *
@@ -100,46 +83,16 @@ class DataMahasiswa extends \yii\db\ActiveRecord
      */
     public function getAnalisaAlternatifs()
     {
-        return $this->hasMany(AnalisaAlternatif::className(), ['alternatif_pertama' => 'id']);
+        return $this->hasMany(AnalisaAlternatif::className(), ['id_alternatif' => 'id']);
     }
 
     /**
-     * Gets query for [[AnalisaAlternatifs0]].
+     * Gets query for [[HasilAnalisas]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getAnalisaAlternatifs0()
+    public function getHasilAnalisas()
     {
-        return $this->hasMany(AnalisaAlternatif::className(), ['alternatif_kedua' => 'id']);
-    }
-
-    /**
-     * Gets query for [[JumAltKris]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getJumAltKris()
-    {
-        return $this->hasMany(JumAltKri::className(), ['id_alternatif' => 'id']);
-    }
-
-    /**
-     * Gets query for [[Kriterias]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getKriterias()
-    {
-        return $this->hasMany(DataKriteria::className(), ['id_kriteria' => 'id_kriteria'])->viaTable('jum_alt_kri', ['id_alternatif' => 'id']);
-    }
-
-    /**
-     * Gets query for [[NilaiAwals]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getNilaiAwals()
-    {
-        return $this->hasMany(NilaiAwal::className(), ['id_alternatif' => 'id']);
+        return $this->hasMany(HasilAnalisa::className(), ['id_alternatif' => 'id']);
     }
 }

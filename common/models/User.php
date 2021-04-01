@@ -34,20 +34,11 @@ class User extends UserModel implements IdentityInterface
         return $this->hasMany(AuthAssign::className(), ['id_user' => 'id']);
     }
 
-//     /**
-//      * @return \yii\db\ActiveQuery
-//      */
-//     public function getTransaksi()
-//     {
-//         return $this->hasOne(Transaksi::className(), ['id_user' => 'id']);
-//     }
-// }
-
     public function getTools()
     {
         return $this->hasOne(Tools::className(), ['id_user' => 'id']);
     }
-    
+
     /**
      * {@inheritdoc}
      */

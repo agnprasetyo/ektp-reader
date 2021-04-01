@@ -81,17 +81,12 @@ class AnalisaMahasiswaController extends Controller
           return $this->inputBobot($a, $b, $c);
         };
 
-        $inputNormalisasi = function($a, $b, $c) {
-          return $this->inputNormalisasi($a, $b, $c);
-        };
-
         return $this->render('analisa', [
             'dataKriteria' => $dataKriteria,
             'dataMahasiswa' => $dataMahasiswa,
             'inputBobot' => $inputBobot,
             'getSkor' => $getSkor,
             'nilai' => $nilai,
-            'inputNormalisasi' => $inputNormalisasi,
         ]);
     }
 
@@ -132,8 +127,8 @@ class AnalisaMahasiswaController extends Controller
     }
 
 
-    //Menghitung indeks VIKOR
-    public function actionHitung()
+    //perangkingan
+    public function actionRangking()
     {
       $dataMahasiswa = DataMahasiswa::find()
               ->orderBy(['id' => SORT_ASC])
@@ -164,6 +159,10 @@ class AnalisaMahasiswaController extends Controller
         return $this->regret();
       };
 
+      $inputNormalisasi = function($a, $b, $c) {
+        return $this->inputNormalisasi($a, $b, $c);
+      };
+
       $inputSi = function($a, $b) {
         return $this->inputSi($a, $b);
       };
@@ -174,7 +173,7 @@ class AnalisaMahasiswaController extends Controller
         return $this->inputQi($a, $b, $c, $d);
       };
 
-      return $this->render('hitung', [
+      return $this->render('rangking', [
           'dataMahasiswa' => $dataMahasiswa,
           'dataKriteria' => $dataKriteria,
           'jumlah' => $jumlah,
@@ -183,6 +182,7 @@ class AnalisaMahasiswaController extends Controller
           'utility' => $utility,
           'regret' => $regret,
 
+          'inputNormalisasi' => $inputNormalisasi,
           'inputSi' => $inputSi,
           'inputRi' => $inputRi,
           'inputQi' => $inputQi,
@@ -280,38 +280,6 @@ class AnalisaMahasiswaController extends Controller
 
       return $model;
     }
-
-    public function actionRangking()
-    {
-      $dataMahasiswa = DataMahasiswa::find()
-              ->orderBy(['qi' => SORT_ASC])
-              ->asArray()
-              ->all();
-
-      return $this->render('rangking', [
-        'dataMahasiswa' => $dataMahasiswa,
-
-      ]);
-    }
-
-    public function actionBukti()
-    {
-      $dataMahasiswa = DataMahasiswa::find()
-              ->orderBy([
-                          'qi'   => SORT_ASC,
-                          'qii'  => SORT_ASC,
-                          'qiii' => SORT_ASC,
-                        ])
-              ->asArray()
-              ->all();
-      // $dataMahasiswa = DataMahasiswa::find(['qi' => SORT_ASC])->all();
-
-      return $this->render('bukti', [
-        'dataMahasiswa' => $dataMahasiswa,
-
-      ]);
-    }
-
 
     //import detail mahasiswa (data kriteria)
     public function actionImport()
