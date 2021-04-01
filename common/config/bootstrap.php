@@ -4,5 +4,5 @@ Yii::setAlias('@frontend', dirname(dirname(__DIR__)) . '/frontend');
 Yii::setAlias('@backend', dirname(dirname(__DIR__)) . '/backend');
 Yii::setAlias('@console', dirname(dirname(__DIR__)) . '/console');
 
-Yii::setAlias('@ektp', dirname(dirname(__DIR__)) . '/ektp');
 Yii::setAlias('@themes', dirname(dirname(__DIR__)) . '/themes');
+Yii::setAlias('@api', dirname(dirname(__DIR__)) . '/api');

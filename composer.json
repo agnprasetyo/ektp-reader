@@ -18,7 +18,13 @@
         "yiisoft/yii2": "~2.0.14",
         "yiisoft/yii2-bootstrap": "~2.0.0",
         "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
-        "consik/yii2-websocket": "^1.0"
+        "consik/yii2-websocket": "^1.0",
+
+        "diecoding/yii2-core": "dev-master",
+        "ruskid/yii2-csv-importer": "dev-master",
+        "yiisoft/yii2-queue": "^2.3",
+        "juliardi/data-reader": "^1.1",
+        "perminder-klair/yii2-dropzone": "dev-master"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

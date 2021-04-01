@@ -40,29 +40,6 @@ class Assign extends Component
         return $this->getAssign() == AuthAssign::ADMINISTRATOR;
     }
 
-    /**
-     *
-     */
-    public function isPenjual()
-    {
-        return $this->getAssign() == AuthAssign::PENJUAL;
-    }
-
-    /**
-     *
-     */
-    public function isPembeli()
-    {
-        return $this->getAssign() == AuthAssign::PEMBELI;
-    }
-
-    /**
-     *
-     */
-    public function isBoth()
-    {
-        return $this->isAdministrator() || $this->isPenjual() || $this->isPembeli();
-    }
 
     /**
      *

@@ -9,6 +9,7 @@ use Yii;
  *
  * @property int $id
  * @property int $id_user
+ * @property string $url
  * @property int $port
  * @property string $serial
  * @property string $tempat
@@ -33,7 +34,7 @@ class Tools extends \yii\db\ActiveRecord
         return [
             [['id_user', 'port', 'serial', 'tempat'], 'required'],
             [['id_user', 'port'], 'integer'],
-            [['serial', 'tempat'], 'string', 'max' => 255],
+            [['serial', 'tempat', 'url'], 'string', 'max' => 255],
             [['id_user'], 'unique'],
             [['id_user'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['id_user' => 'id']],
         ];
@@ -46,7 +47,8 @@ class Tools extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'id_user' => 'Id User',
+            'id_user' => 'Username',
+            'url' => 'Url',
             'port' => 'Port',
             'serial' => 'Serial',
             'tempat' => 'Tempat',

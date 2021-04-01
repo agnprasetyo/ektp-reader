@@ -26,14 +26,14 @@ use yii\web\IdentityInterface;
 class User extends UserModel implements IdentityInterface
 {
 
-//     /**
-//      * @return \yii\db\ActiveQuery
-//      */
-//     public function getAuthAssigns()
-//     {
-//         return $this->hasMany(AuthAssign::className(), ['id_user' => 'id']);
-//     }
-//
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAuthAssigns()
+    {
+        return $this->hasMany(AuthAssign::className(), ['id_user' => 'id']);
+    }
+
 //     /**
 //      * @return \yii\db\ActiveQuery
 //      */
@@ -47,6 +47,7 @@ class User extends UserModel implements IdentityInterface
     {
         return $this->hasOne(Tools::className(), ['id_user' => 'id']);
     }
+    
     /**
      * {@inheritdoc}
      */

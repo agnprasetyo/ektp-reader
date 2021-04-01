@@ -9,6 +9,7 @@ use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+
 use common\models\LoginForm;
 use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
@@ -36,7 +37,7 @@ class SiteController extends Controller
                         'roles' => ['?'],
                     ],
                     [
-                        'actions' => ['logout'],
+                        'actions' => ['logout', 'index'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -74,7 +75,28 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+        if (Yii::$app->assign->isAdministrator()) {
+            return $this->redirect(['beranda']);
+        }
+        // elseif (Yii::$app->assign->isPembeli()) {
+        //       return $this->redirect(['/transaksi/index']);
+        // }
         return $this->render('index');
+    }
+
+    /**
+     * Lists all Tools models.
+     * @return mixed
+     */
+    public function actionBeranda()
+    {
+        $tools = Yii::$app->user->identity->tools;
+        $datauser = Yii::$app->user->identity;
+
+        return $this->render('beranda', [
+            'tools' => $tools,
+            'datauser' => $datauser,
+        ]);
     }
 
     /**
@@ -90,6 +112,7 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            Yii::$app->assign->setAssign();
             return $this->goBack();
         } else {
             $model->password = '';
@@ -112,37 +135,9 @@ class SiteController extends Controller
         return $this->goHome();
     }
 
-    /**
-     * Displays contact page.
-     *
-     * @return mixed
-     */
-    public function actionContact()
+    public function actionProfil()
     {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if ($model->sendEmail(Yii::$app->params['adminEmail'])) {
-                Yii::$app->session->setFlash('success', 'Thank you for contacting us. We will respond to you as soon as possible.');
-            } else {
-                Yii::$app->session->setFlash('error', 'There was an error sending your message.');
-            }
-
-            return $this->refresh();
-        } else {
-            return $this->render('contact', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    /**
-     * Displays about page.
-     *
-     * @return mixed
-     */
-    public function actionAbout()
-    {
-        return $this->render('about');
+        return $this->render('profil');
     }
 
     /**

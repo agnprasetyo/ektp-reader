@@ -1,53 +1,124 @@
 <?php
 
+use yii\helpers\Url;
+
 /* @var $this yii\web\View */
 
-$this->title = 'My Yii Application';
-?>
-<div class="site-index">
+// $this->title = 'My Yii Application';
+$jk = Yii::$app->request->get('jk');
 
-    <div class="jumbotron">
-        <h1>Congratulations!</h1>
+$uHome = Url::base(true);
 
-        <p class="lead">You have successfully created your Yii-powered application.</p>
-
-        <p><a class="btn btn-lg btn-success" href="http://www.yiiframework.com">Get started with Yii</a></p>
-    </div>
-
-    <div class="body-content">
-
-        <div class="row">
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/doc/">Yii Documentation &raquo;</a></p>
+$appName = "SISTEM SELEKSI BEASISWA KIP";
+$appUnit = "KEMAHASISWAAN DAN ALUMNI UNS";
+$this->params['header-block'] = <<< HTML
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <div class="row align-items-center">
+                    <div class="col-sm-12 text-uppercase">
+                      <h4 class="page-title">{$appName}</h4>
+                      <ol class="breadcrumb">
+                          <li class="breadcrumb-item active">{$appUnit}</li>
+                      </ol>
+                    </div>
+                </div> <!-- end row-->
             </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/forum/">Yii Forum &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/extensions/">Yii Extensions &raquo;</a></p>
-            </div>
-        </div>
-
-    </div>
+            <!-- end page title -->
+        </div> <!-- end col -->
+    </div> <!-- end row-->
 </div>
+HTML;
+?>
+<!-- <div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body"> -->
+
+                <!-- <div class="row">
+                    <div class="col-md-3 col-sm-6">
+                        <a href="halo">
+                            <div class="card mini-stat bg-primary text-white">
+                                <div class="card-body">
+                                    <div class="">
+                                        <div class="float-right mini-stat-img ml-4">
+                                            <img src="<?php echo "icon" ?>" alt="">
+                                        </div>
+                                        <h5 class="font-14 text-uppercase mt-0 text-white-50"><?php echo "label" ?></h5>
+                                        <h4 class="font-30 font-500 mb-0 text-white">
+
+                                        </h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div> -->
+                <!-- end row -->
+
+                <div class="card-deck-wrapper mb-4">
+                    <div class="card-deck">
+                        <div class="card col-xl-6 col-md-6 col-sm-12">
+                            <div class="card-body">
+
+                                <h4 class="mt-0 header-title">Statistik</h4>
+                                <nav>
+                                    <div class="nav nav-tabs tab-wid recent-stock-widget nav-justified" role="tablist">
+                                        <a class="nav-item nav-link active" id="nav-comp-tab" data-toggle="tab" href="#nav-comp" role="tab" aria-controls="nav-comp" aria-selected="true">
+                                            <i class="dripicons-heart h4 product-icon"></i>
+                                            <p class="text-muted mb-0">Aktif</p>
+                                        </a>
+                                        <a class="nav-item nav-link" id="nav-laptop-tab" data-toggle="tab" href="#nav-laptop" role="tab" aria-controls="nav-laptop" aria-selected="false">
+                                            <i class="dripicons-warning h4 product-icon"></i>
+                                            <p class="text-muted mb-0">Tidak Aktif</p>
+                                        </a>
+                                    </div>
+                                </nav>
+                                <div class="tab-content">
+                                    <div class="tab-pane fade show active" id="nav-comp" role="tabpanel" aria-labelledby="nav-comp-tab">
+                                        <div class="text-center">
+                                            <div id="radial-chart"></div>
+                                            <h5 class="font-18">Aktif</h5>
+                                            <p class="text-muted mb-0">
+                                              data1
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="nav-laptop" role="tabpanel" aria-labelledby="nav-laptop-tab">
+                                        <div class="text-center">
+                                            <div id="radial-chart-2"></div>
+                                            <h5 class="font-18">Tidak Aktif</h5>
+                                            <p class="text-muted mb-0">
+                                              data2
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card col-xl-6 col-md-6 col-sm-12">
+                            <div class="card-body">
+                                <h4 class="mt-0 header-title">Statistik Aktivitas</h4>
+                                <div id="multiple-radial-chart" class="chart-hide-xs" dir="ltr"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end row -->
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+
+                                <h4 class="mt-0 header-title">Grafik</h4>
+                                <div id="world-map-markers" class="vector-map-height"></div>
+
+                            </div>
+                        </div>
+                    </div> <!-- end col -->
+                </div> <!-- end row -->
+
+            <!-- </div>
+        </div>
+    </div>
+</div> -->

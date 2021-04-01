@@ -13,5 +13,6 @@ return array(
     'Guzzle\\Common' => array($vendorDir . '/guzzle/common'),
     'Evenement' => array($vendorDir . '/evenement/evenement/src'),
     'Diff' => array($vendorDir . '/phpspec/php-diff/lib'),
+    'Detection' => array($vendorDir . '/mobiledetect/mobiledetectlib/namespaced'),
     'Behat\\Gherkin' => array($vendorDir . '/behat/gherkin/src'),
 );
