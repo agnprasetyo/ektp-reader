@@ -1,9 +1,7 @@
 <?php
-
 use yii\helpers\Url;
 
 /* @var $this yii\web\View */
-/* @var $model common\models\AnalisaAlternatif */
 
 \yii\web\YiiAsset::register($this);
 
@@ -14,6 +12,8 @@ $jk = Yii::$app->request->get('jk');
 $uHome = Url::base(true);
 $uIndex = Url::toRoute(['index', 'jk' => Yii::$app->request->get('jk')]);
 $uBack = Yii::$app->request->referrer ?: $uHome;
+
+extract($other);
 
 $this->params['header-block'] = <<< HTML
 <div class="container-fluid">
@@ -46,6 +46,7 @@ $this->params['header-block'] = <<< HTML
 </div>
 HTML;
 ?>
+
 <div class="row">
     <div class="col-12">
         <div class="card">
@@ -61,68 +62,31 @@ HTML;
         				</div>
         			</div>
                 <br/>
-
                 <table width="100%" class="table table-striped table-bordered">
                   <thead>
                       <tr>
-                        <th rowspan="2" class="text-center active">Alternatif</th>
-                        <?php foreach ($dataKriteria as $value) { ?>
-                        <th colspan="2" class="text-center">Kriteria <?=$value['nama_kriteria']?></th>
-                        <?php } ?>
-                      </tr>
-                      <tr>
-                        <?php foreach ($dataKriteria as $value) { ?>
-                        <th class="text-center">Nilai</th>
-                        <th class="bg-primary text-white text-center">Bobot</th>
-                        <?php } ?>
+                        <th class="text-center active">Alternatif</th>
+                        <th class="text-center active">Bobot V = 0.5</th>
+                        <th class="text-center active">Peringkat</th>
+                        <th class="text-center active">Bobot V = 0.44</th>
+                        <th class="text-center active">Peringkat</th>
+                        <th class="text-center active">Bobot V = 0.56</th>
+                        <th class="text-center active">Peringkat</th>
                       </tr>
                   </thead>
-
                   <tbody>
-                    <?php foreach ($dataAnalisa as $value) { ?>
+                    <?php $ranking1 = 1; $ranking2 = 1; $ranking3 = 1; foreach ($dataMahasiswa as $baris) { ?>
                       <tr>
-                        <th class="active"><?=$value['id_alternatif']?></th>
-                        <td>
-                          <?php
-                          $max = $nilai($value['id_kriteria']);
-                          $min = $nilai($value['id_kriteria']);
-
-                          $normal = ($max['largest']-$value['nilai'])/($max['largest']-$min['smallest']);
-                          echo number_format($normal, 4, '.', ',');
-
-                          ?>
-                        </td>
-                        <td>
-                          <?php
-                          // $hasil = $normal*$dataKriteria['bobot_kriteria'];
-
-                          // echo number_format($hasil, 4, '.', ',');
-
-                          ?>
-                        </td>
-                      </tr>
+                        <td class="active"><?= $baris['nama'] ?></td>
+                        <td class="active"><?php echo number_format($baris['qi'], 4, '.', ','); ?></td>
+                        <td class="bg-primary text-white text-center"><?=$ranking1++?></td>
+                        <td class="active"><?php echo number_format($baris['qii'], 4, '.', ','); ?></td>
+                        <td class="bg-primary text-white text-center"><?=$ranking2++?></td>
+                        <td class="active"><?php echo number_format($baris['qiii'], 4, '.', ','); ?>
+                        <td class="bg-primary text-white text-center"><?=$ranking3++?></td>
+            					</tr>
                     <?php } ?>
                   </tbody>
-                  <tfoot>
-                    <tr class="info">
-                      <th>Maksimal</th>
-                        <th>
-                          <?php
-                          $max = $nilai($value['id_kriteria']);
-                          echo number_format($max['largest'], 4, '.', ',');
-                          ?>
-                        </th>
-                    </tr>
-                    <tr class="info">
-                      <th>Minimal</th>
-                        <th>
-                          <?php
-                          $min = $nilai($value['id_kriteria']);
-                          echo number_format($min['smallest'], 4, '.', ',');
-                          ?>
-                        </th>
-                    </tr>
-                  </tfoot>
                 </table>
 
           </div>

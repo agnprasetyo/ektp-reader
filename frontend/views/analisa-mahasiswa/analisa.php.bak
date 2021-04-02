@@ -3,7 +3,6 @@
 use yii\helpers\Url;
 
 /* @var $this yii\web\View */
-/* @var $model common\models\AnalisaAlternatif */
 
 \yii\web\YiiAsset::register($this);
 
@@ -61,69 +60,69 @@ HTML;
         				</div>
         			</div>
                 <br/>
-
                 <table width="100%" class="table table-striped table-bordered">
                   <thead>
                       <tr>
-                        <th rowspan="2" class="text-center active">Alternatif</th>
-                        <?php foreach ($dataKriteria as $value) { ?>
-                        <th colspan="2" class="text-center">Kriteria <?=$value['nama_kriteria']?></th>
+                        <th class="text-center active">Alternatif</th>
+                        <?php foreach ($dataKriteria as $kriteria) { ?>
+                        <th class="text-center">Kriteria <?=$kriteria['nama_kriteria']?></th>
                         <?php } ?>
                       </tr>
+                  </thead>
+                  <tbody>
+                    <?php foreach ($dataMahasiswa as $baris) { ?>
                       <tr>
-                        <?php foreach ($dataKriteria as $value) { ?>
-                        <th class="text-center">Nilai</th>
-                        <th class="bg-primary text-white text-center">Bobot</th>
+                        <th class="active"><?= $baris['nama'] ?></th>
+                        <?php foreach ($dataKriteria as $kolom) { ?>
+                          <td>
+          									<?php
+                              $max = $nilai($kolom['id_kriteria']);
+                              $min = $nilai($kolom['id_kriteria']);
+
+                              $skor = $getSkor($baris['id'], $kolom['id_kriteria']);
+                              // echo number_format($skor['nilai'], 4, '.', ',');
+
+                              $normal = ($max['largest']-$skor['nilai'])/($max['largest']-$min['smallest']);
+                              echo number_format($normal, 4, '.', ',');
+                              $bobot = $inputBobot($normal, $baris['id'], $kolom['id_kriteria']);
+          									?>
+          								</td>
+                        <?php } ?>
+            					</tr>
+                    <?php } ?>
+                  </tbody>
+                </table>
+
+                </br>
+                <table width="100%" class="table table-striped table-bordered">
+                  <thead>
+                      <tr>
+                        <th class="text-center active">Alternatif</th>
+                        <?php foreach ($dataKriteria as $kriteria) { ?>
+                        <th class="text-center">Kriteria <?=$kriteria['nama_kriteria']?></th>
                         <?php } ?>
                       </tr>
                   </thead>
 
                   <tbody>
-                    <?php foreach ($dataAnalisa as $value) { ?>
+                    <?php foreach ($dataMahasiswa as $baris) { ?>
                       <tr>
-                        <th class="active"><?=$value['id_alternatif']?></th>
-                        <td>
-                          <?php
-                          $max = $nilai($value['id_kriteria']);
-                          $min = $nilai($value['id_kriteria']);
-
-                          $normal = ($max['largest']-$value['nilai'])/($max['largest']-$min['smallest']);
-                          echo number_format($normal, 4, '.', ',');
-
-                          ?>
-                        </td>
-                        <td>
-                          <?php
-                          // $hasil = $normal*$dataKriteria['bobot_kriteria'];
-
-                          // echo number_format($hasil, 4, '.', ',');
-
-                          ?>
-                        </td>
-                      </tr>
+                        <th class="active"><?= $baris['nama'] ?></th>
+                        <?php foreach ($dataKriteria as $kolom) { ?>
+                          <td>
+          									<?php
+                              $bobot = $getSkor($baris['id'], $kolom['id_kriteria']);
+                              $hasil = $bobot['bobot'] * $kolom['bobot_kriteria'];
+                              echo number_format($hasil, 4, '.', ',');
+                              $normalisasi = $inputNormalisasi($hasil, $baris['id'], $kolom['id_kriteria']);
+          									?>
+          								</td>
+                        <?php } ?>
+            					</tr>
                     <?php } ?>
                   </tbody>
-                  <tfoot>
-                    <tr class="info">
-                      <th>Maksimal</th>
-                        <th>
-                          <?php
-                          $max = $nilai($value['id_kriteria']);
-                          echo number_format($max['largest'], 4, '.', ',');
-                          ?>
-                        </th>
-                    </tr>
-                    <tr class="info">
-                      <th>Minimal</th>
-                        <th>
-                          <?php
-                          $min = $nilai($value['id_kriteria']);
-                          echo number_format($min['smallest'], 4, '.', ',');
-                          ?>
-                        </th>
-                    </tr>
-                  </tfoot>
                 </table>
+
 
           </div>
       </div>

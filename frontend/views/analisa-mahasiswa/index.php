@@ -8,6 +8,21 @@ use yii\widgets\ActiveForm;
 /* @var $searchModel frontend\models\AnalisaMahasiswaSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
+$session = Yii::$app->session;
+
+$_width = 100 / 4;
+$css = <<< CSS
+.wizard > .steps > ul > li {
+    width: {$_width}%;
+}
+@media (max-width: 512px) {
+    .wizard > .steps > ul > li {
+        width: 100%;
+    }
+}
+CSS;
+$this->registerCss($css);
+
 $this->title = 'Analisa Mahasiswa';
 
 $jk = Yii::$app->request->get('jk');
@@ -53,12 +68,35 @@ HTML;
 
 
             <div class="card-body">
-              <?= Html::a('Import Nilai Mahasiswa', ['import'], ['class' => 'btn btn-success']) ?>
-              <?= Html::a('Mulai Analisa', ['analisa'], ['class' => 'btn btn-success']) ?>
-              <?= Html::a('Hitung Indeks', ['hitung'], ['class' => 'btn btn-success']) ?>
-              <?= Html::a('Perangkingan', ['rangking'], ['class' => 'btn btn-success']) ?>
-              <?= Html::a('Pembuktian', ['bukti'], ['class' => 'btn btn-success']) ?>
+              <?php
+
+              $numb = [
+                'one', 'two', 'three', 'four', 'five',
+              ];
+
+              foreach ([
+                'Import Nilai Mahasiswa',
+                'Mulai Analisa',
+                'Hitung Indeks',
+                'Perangkingan',
+                'Pembuktian',
+                ] as $key => $label) {
+                  echo Html::a($label, $session['regist'][$numb[$key]]['tab']['href'], [
+                    'class' => $session['regist'][$numb[$key]]['tab']['class'],
+                    'readonly' => $session['regist'][$numb[$key]]['tab']['disabled'],
+                    'disabled' => $session['regist'][$numb[$key]]['tab']['disabled'],
+                  ]);
+              }
+              ?>
+
             </div>
+
+            <?php echo $this->render("_{$data['form']}", [
+              'model' => $model,
+              'data' => $data,
+              'other' => $other,
+              ]) ?>
+
         </div>
     </div>
 </div>

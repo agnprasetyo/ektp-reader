@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Url;
+use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 
@@ -13,6 +14,8 @@ $jk = Yii::$app->request->get('jk');
 $uHome = Url::base(true);
 $uIndex = Url::toRoute(['index', 'jk' => Yii::$app->request->get('jk')]);
 $uBack = Yii::$app->request->referrer ?: $uHome;
+
+extract($other);
 
 $this->params['header-block'] = <<< HTML
 <div class="container-fluid">
@@ -45,6 +48,19 @@ $this->params['header-block'] = <<< HTML
 </div>
 HTML;
 ?>
+
+<div class="--floating-container">
+    <div class="--floating-row">
+        <?php
+            echo Html::a("Next <i class='fa fa-arrow-right ml-2'></i>", [''], [
+              "class" => "--btn-float btn-primary btn btn-lg",
+              "data-method" => "post",
+            ])
+        ?>
+    </div>
+</div>
+
+
 <div class="row">
     <div class="col-12">
         <div class="card">
@@ -59,58 +75,6 @@ HTML;
         					</form>
         				</div>
         			</div>
-                <br/>
-                <table width="100%" class="table table-striped table-bordered">
-                  <thead>
-                      <tr>
-                        <th class="text-center active">Alternatif</th>
-                        <?php foreach ($dataKriteria as $kriteria) { ?>
-                        <th class="text-center">Kriteria <?=$kriteria['nama_kriteria']?></th>
-                        <?php } ?>
-                      </tr>
-                  </thead>
-
-                  <tbody>
-                    <?php foreach ($dataMahasiswa as $baris) { ?>
-                      <tr>
-                        <th class="active"><?= $baris['nama'] ?></th>
-                        <?php foreach ($dataKriteria as $kolom) { ?>
-                          <td>
-          									<?php
-                              $skor = $getSkor($baris['id'], $kolom['id_kriteria']);
-          										echo number_format($skor['nilai'], 4, '.', ',');
-          									?>
-          								</td>
-                        <?php } ?>
-            					</tr>
-                    <?php } ?>
-                  </tbody>
-                  <tfoot>
-                    <tr class="info">
-                      <th>Maksimal</th>
-                      <?php foreach ($dataKriteria as $kriteria) { ?>
-                        <th>
-                          <?php
-                          $max = $nilai($kriteria['id_kriteria']);
-                          echo number_format($max['largest'], 4, '.', ',');
-                          ?>
-                        </th>
-                      <?php } ?>
-                    </tr>
-                    <tr class="info">
-                      <th>Minimal</th>
-                      <?php foreach ($dataKriteria as $kriteria) { ?>
-                        <th>
-                          <?php
-                          $min = $nilai($kriteria['id_kriteria']);
-                          echo number_format($min['smallest'], 4, '.', ',');
-                          ?>
-                        </th>
-                      <?php } ?>
-                    </tr>
-                  </tfoot>
-                </table>
-
                 <br/>
                 <table width="100%" class="table table-striped table-bordered">
                   <thead>
@@ -137,7 +101,37 @@ HTML;
                               $normal = ($max['largest']-$skor['nilai'])/($max['largest']-$min['smallest']);
                               echo number_format($normal, 4, '.', ',');
                               $bobot = $inputBobot($normal, $baris['id'], $kolom['id_kriteria']);
-          									?>
+                                              ?>
+          								</td>
+                        <?php } ?>
+            					</tr>
+                    <?php } ?>
+                  </tbody>
+                </table>
+
+                </br>
+                <table width="100%" class="table table-striped table-bordered">
+                  <thead>
+                      <tr>
+                        <th class="text-center active">Alternatif</th>
+                        <?php foreach ($dataKriteria as $kriteria) { ?>
+                        <th class="text-center">Kriteria <?=$kriteria['nama_kriteria']?></th>
+                        <?php } ?>
+                      </tr>
+                  </thead>
+
+                  <tbody>
+                    <?php foreach ($dataMahasiswa as $baris) { ?>
+                      <tr>
+                        <th class="active"><?= $baris['nama'] ?></th>
+                        <?php foreach ($dataKriteria as $kolom) { ?>
+                          <td>
+          									<?php
+                              $bobot = $getSkor($baris['id'], $kolom['id_kriteria']);
+                              $hasil = $bobot['bobot'] * $kolom['bobot_kriteria'];
+                              echo number_format($hasil, 4, '.', ',');
+                              $normalisasi = $inputNormalisasi($hasil, $baris['id'], $kolom['id_kriteria']);
+                                              ?>
           								</td>
                         <?php } ?>
             					</tr>

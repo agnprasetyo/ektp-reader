@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Url;
+use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\AnalisaAlternatif */
@@ -14,6 +15,8 @@ $jk = Yii::$app->request->get('jk');
 $uHome = Url::base(true);
 $uIndex = Url::toRoute(['index', 'jk' => Yii::$app->request->get('jk')]);
 $uBack = Yii::$app->request->referrer ?: $uHome;
+
+extract($other);
 
 $this->params['header-block'] = <<< HTML
 <div class="container-fluid">
@@ -46,6 +49,18 @@ $this->params['header-block'] = <<< HTML
 </div>
 HTML;
 ?>
+
+<div class="--floating-container">
+    <div class="--floating-row">
+        <?php
+            echo Html::a("Next <i class='fa fa-arrow-right ml-2'></i>", [''], [
+              "class" => "--btn-float btn-primary btn btn-lg",
+              "data-method" => "post",
+            ])
+        ?>
+    </div>
+</div>
+
 <div class="row">
     <div class="col-12">
         <div class="card">
@@ -66,9 +81,6 @@ HTML;
                   <thead>
                     <tr>
                       <th class="text-center active">Alternatif</th>
-                      <?php foreach ($dataKriteria as $judul) { ?>
-                        <th><?=$judul['nama_kriteria']?></th>
-                      <?php } ?>
                       <th>Hasil Si</th>
                       <th>Hasil Ri</th>
                       <th>Hasil Qi</th>
@@ -78,34 +90,42 @@ HTML;
 
                   </thead>
                   <tbody>
-                    <?php foreach ($dataMahasiswa as $baris) { ?>
+
+                    <?php
+                      // foreach ($dataMahasiswa as $b) {
+                      //   foreach ($dataKriteria as $k) {
+                      //       $bobot = $getSkor($b['id'], $k['id_kriteria']);
+                      //       $hasil = $bobot['bobot'] * $k['bobot_kriteria'];
+                      //
+                      //       $normalisasi = $inputNormalisasi($hasil, $b['id'], $k['id_kriteria']);
+                      //   }
+                      //
+                      //   $si = $jumlah($b['id']);
+                      //   $satu = $inputSi($si['jumlah'], $b['id']);
+                      //
+                      //   // $dataMahasiswa[$key]['si'] = $si['jumlah'];
+                      //
+                      //   $ri = $terbesar($b['id']);
+                      //   $dua = $inputRi($ri['max'], $b['id']);
+                      // }
+                    ?>
+
+                    <?php foreach ($dataMahasiswa as $key => $baris) { ?>
                       <tr>
                         <th class="active"><?=$baris['nama']?></th>
-                        <?php foreach ($dataKriteria as $kolom) { ?>
                         <td>
                           <?php
-                            $bobot = $getSkor($baris['id'], $kolom['id_kriteria']);
-                            $hasil = $bobot['bobot'] * $kolom['bobot_kriteria'];
-                            echo number_format($hasil, 4, '.', ',');
-                            $normalisasi = $inputNormalisasi($hasil, $baris['id'], $kolom['id_kriteria'])
-                          ?>
-                        </td>
-                        <?php } ?>
-                        <td>
-                          <?php
-                            $si = $jumlah($baris['id']);
-                            echo number_format($si['jumlah'], 4, '.', ',');
-                            $satu = $inputSi($si['jumlah'], $baris['id']);
+                          $si = $jumlah($baris['id']);
+                          $satu = $inputSi($si['jumlah'], $baris['id']);
+                          echo number_format($si['jumlah'], 4, '.', ',');
                           ?>
                         </td>
                         <td>
                           <?php
-                            $ri = $terbesar($baris['id']);
-                            echo number_format($ri['max'], 4, '.', ',');
-                            $dua = $inputRi($ri['max'], $baris['id']);
-                          ?>
+                          $ri = $terbesar($baris['id']);
+                          $dua = $inputRi($ri['max'], $baris['id']);
+                          echo number_format($ri['max'], 4, '.', ',');?>
                         </td>
-
                         <td>
                           <?php
                             $maxSi = $utility($baris['id']);
@@ -113,7 +133,18 @@ HTML;
                             $minSi = $utility($baris['id']);
                             $minRi = $regret($baris['id']);
 
-                            $qi = (0.5*(($si['jumlah']-$minSi['smallest'])/($maxSi['largest']-$minSi['smallest'])))+((1-0.5)*(($ri['max']-$minRi['smallest'])/($maxRi['largest']-$minRi['smallest'])));
+                            // echo "Si1 : ";print_r($si['jumlah']);
+                            // echo " || Si2 : ";print_r($baris['si']);
+                            // echo " || MinSi : ";print_r($minSi['smallest']);
+                            // echo " || MaxSi : ";print_r($maxSi['largest']);
+                            //
+                            // echo " || Ri : ";print_r($ri['max']);
+                            // echo " || MinRi : ";print_r($minRi['smallest']);
+                            // echo " || MaxRi : ";print_r($maxRi['largest']);
+                            // exit;
+
+                            $qi = (0.5*(($baris['si']-$minSi['smallest'])/($maxSi['largest']-$minSi['smallest'])))+((1-0.5)*(($ri['max']-$minRi['smallest'])/($maxRi['largest']-$minRi['smallest'])));
+
                             $qii = (0.45*(($si['jumlah']-$minSi['smallest'])/($maxSi['largest']-$minSi['smallest'])))+((1-0.45)*(($ri['max']-$minRi['smallest'])/($maxRi['largest']-$minRi['smallest'])));
                             $qiii = (0.55*(($si['jumlah']-$minSi['smallest'])/($maxSi['largest']-$minSi['smallest'])))+((1-0.55)*(($ri['max']-$minRi['smallest'])/($maxRi['largest']-$minRi['smallest'])));
                             echo number_format($qi, 4, '.', ',');
@@ -130,19 +161,19 @@ HTML;
                   <tfoot>
                     <tr class="info">
                       <th>Maksimal</th>
-                        <?php foreach ($dataKriteria as $judul) { ?>
-                          <td></td>
-                        <?php } ?>
                         <td><?= number_format($maxSi['largest'], 4, '.', ','); ?></td>
                         <td><?= number_format($maxRi['largest'], 4, '.', ','); ?></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                     </tr>
                     <tr class="info">
                       <th>Minimal</th>
-                        <?php foreach ($dataKriteria as $judul) { ?>
-                          <td></td>
-                        <?php } ?>
                         <td><?= number_format($minSi['smallest'], 4, '.', ','); ?></td>
                         <td><?= number_format($minRi['smallest'], 4, '.', ','); ?></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                     </tr>
                   </tfoot>
                 </table>
