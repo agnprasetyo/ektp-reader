@@ -39,71 +39,56 @@ class AnalisaKriteriaController extends Controller
      */
     public function actionIndex()
     {
-
-        // if (Yii::$app->request->post()) {
-        //   echo '<pre>';
-        //   print_r(Yii::$app->request->post());
-        //   echo '</pre>';
-        //   exit;
-        // }
-
         $query = DataKriteria::find()
                 ->orderBy(['id_kriteria' => SORT_ASC])
                 ->asArray()
                 ->all();
 
         if (Yii::$app->request->isPost) {
-          $postData = Yii::$app->request->post();
-          $countRow = count($postData['kriteria_pertama']);
-          $basisKriteria = [];
+            $postData = Yii::$app->request->post();
+            $countRow = count($postData['kriteria_pertama']);
+            $basisKriteria = [];
 
-          for($i = 0; $i < $countRow; $i++) {
-              $kPertama = $postData['kriteria_pertama'][$i];
-              $kKedua = $postData['kriteria_kedua'][$i];
-              $index = $kPertama . '-' . $kKedua;
-              $basisKriteria[$index] = $postData['nilai_analisa_kriteria'][$i];
-          }
+            for ($i = 0; $i < $countRow; $i++) {
+                $kPertama = $postData['kriteria_pertama'][$i];
+                $kKedua = $postData['kriteria_kedua'][$i];
+                $index = $kPertama . '-' . $kKedua;
+                $basisKriteria[$index] = $postData['nilai_analisa_kriteria'][$i];
+            }
 
-          foreach ($query as $kolom) {
-            foreach ($query as $baris) {
-              $kriteriaKolom = $kolom['id_kriteria'];
-              $kriteriaBaris = $baris['id_kriteria'];
-              $cekIndex1 = $kriteriaKolom . '-' . $kriteriaBaris;
-              $cekIndex2 = $kriteriaBaris . '-' . $kriteriaKolom;
+            foreach ($query as $kolom) {
+                foreach ($query as $baris) {
+                    $kriteriaKolom = $kolom['id_kriteria'];
+                    $kriteriaBaris = $baris['id_kriteria'];
+                    $cekIndex1 = $kriteriaKolom . '-' . $kriteriaBaris;
+                    $cekIndex2 = $kriteriaBaris . '-' . $kriteriaKolom;
 
-              $newModel = AnalisaKriteria::findOne([
+                    $newModel = AnalisaKriteria::findOne([
                 'kriteria_pertama' => $kriteriaKolom,
                 'kriteria_kedua' => $kriteriaBaris,
               ]);
 
-              if($newModel == null) {
-                $newModel = new AnalisaKriteria();
-              }
+                    if ($newModel == null) {
+                        $newModel = new AnalisaKriteria();
+                    }
 
-              $newModel->setAttribute('kriteria_pertama', $kolom['id_kriteria']);
-              $newModel->setAttribute('hasil_analisa_kriteria', 0);
-              $newModel->setAttribute('kriteria_kedua', $baris['id_kriteria']);
+                    $newModel->setAttribute('kriteria_pertama', $kolom['id_kriteria']);
+                    $newModel->setAttribute('hasil_analisa_kriteria', 0);
+                    $newModel->setAttribute('kriteria_kedua', $baris['id_kriteria']);
 
-              if($kriteriaKolom == $kriteriaBaris) {
-                $newModel->setAttribute('nilai_analisa_kriteria', 1);
-              } else if(isset($basisKriteria[$cekIndex1])) {
-                $newModel->setAttribute('nilai_analisa_kriteria', $basisKriteria[$cekIndex1]);
-              } else if(isset($basisKriteria[$cekIndex2])) {
-                $newModel->setAttribute('nilai_analisa_kriteria', 1 / $basisKriteria[$cekIndex2]);
-              }
+                    if ($kriteriaKolom == $kriteriaBaris) {
+                        $newModel->setAttribute('nilai_analisa_kriteria', 1);
+                    } elseif (isset($basisKriteria[$cekIndex1])) {
+                        $newModel->setAttribute('nilai_analisa_kriteria', $basisKriteria[$cekIndex1]);
+                    } elseif (isset($basisKriteria[$cekIndex2])) {
+                        $newModel->setAttribute('nilai_analisa_kriteria', 1 / $basisKriteria[$cekIndex2]);
+                    }
 
-              $newModel->save();
-
-              // if($newModel->save()) {
-              //   echo '<pre>';
-              //   print_r($newModel->attributes);
-              //   print_r($newModel->errors);
-              //   echo '</pre>';exit;
-              // }
+                    $newModel->save();
+                }
             }
-          }
 
-          return $this->redirect(['analisa']);
+            return $this->redirect(['analisa']);
         }
 
         $nilai = Nilai::find()
@@ -132,45 +117,45 @@ class AnalisaKriteriaController extends Controller
      */
     public function actionAnalisa()
     {
-      $query = DataKriteria::find()
+        $query = DataKriteria::find()
               ->orderBy(['id_kriteria' => SORT_ASC])
               ->asArray()
               ->all();
 
-      $inputJumlah = function ($a, $b) {
-        return $this->inputJumlah($a, $b);
-      };
+        $inputJumlah = function ($a, $b) {
+            return $this->inputJumlah($a, $b);
+        };
 
-      $inputHasil = function ($a, $b, $c) {
-        return $this->inputHasil($a, $b, $c);
-      };
+        $inputHasil = function ($a, $b, $c) {
+            return $this->inputHasil($a, $b, $c);
+        };
 
-      $inputBobot = function ($a, $b) {
-        return $this->inputBobot($a, $b);
-      };
+        $inputBobot = function ($a, $b) {
+            return $this->inputBobot($a, $b);
+        };
 
-      $getTabel = function($a, $b) {
-        return $this->getTabel($a, $b);
-      };
+        $getTabel = function ($a, $b) {
+            return $this->getTabel($a, $b);
+        };
 
-      $jumlahKolom = function($a) {
-        return $this->jumlah($a);
-      };
+        $jumlahKolom = function ($a) {
+            return $this->jumlah($a);
+        };
 
-      $jumlahBaris = function($a) {
-        return $this->jumlahBaris($a);
-      };
+        $jumlahBaris = function ($a) {
+            return $this->jumlahBaris($a);
+        };
 
-      $avg = function($a) {
-        return $this->avg($a);
-      };
+        $avg = function ($a) {
+            return $this->avg($a);
+        };
 
-      $getIr = function ($n) {
-        return $this->getIr($n);
-      };
+        $getIr = function ($n) {
+            return $this->getIr($n);
+        };
 
 
-      return $this->render('analisa', [
+        return $this->render('analisa', [
           'query' => $query,
           'inputJumlah' => $inputJumlah,
           'inputHasil' => $inputHasil,
@@ -185,33 +170,33 @@ class AnalisaKriteriaController extends Controller
 
     public function inputJumlah($a, $b)
     {
-      $model = DataKriteria::findOne(['id_kriteria' => $b]);
-      $model->updateAttributes(['jumlah_kriteria' => $a]);
+        $model = DataKriteria::findOne(['id_kriteria' => $b]);
+        $model->updateAttributes(['jumlah_kriteria' => $a]);
 
-      return $model;
+        return $model;
     }
 
     public function inputHasil($a, $b, $c)
     {
-      $model = AnalisaKriteria::findOne(['kriteria_pertama' => $b, 'kriteria_kedua' => $c]);
-      $model->updateAttributes(['hasil_analisa_kriteria' => $a]);
+        $model = AnalisaKriteria::findOne(['kriteria_pertama' => $b, 'kriteria_kedua' => $c]);
+        $model->updateAttributes(['hasil_analisa_kriteria' => $a]);
 
-      return $model;
+        return $model;
     }
 
     public function inputBobot($a, $b)
     {
-      $model = DataKriteria::findOne(['id_kriteria' => $b]);
-      $model->updateAttributes(['bobot_kriteria' => $a]);
+        $model = DataKriteria::findOne(['id_kriteria' => $b]);
+        $model->updateAttributes(['bobot_kriteria' => $a]);
 
-      $model->updateAttributes(['status' => 0]);
+        $model->updateAttributes(['status' => 0]);
 
-      return $model;
+        return $model;
     }
 
     public function getTabel($a, $b)
     {
-      $query = AnalisaKriteria::find()
+        $query = AnalisaKriteria::find()
               ->where([
                 'kriteria_pertama' => $a,
                 'kriteria_kedua' => $b,
@@ -219,90 +204,137 @@ class AnalisaKriteriaController extends Controller
               ->asArray()
               ->one();
 
-      return $query;
+        return $query;
     }
 
     public function jumlah($a)
     {
-      $sumKolom = AnalisaKriteria::find()
+        $sumKolom = AnalisaKriteria::find()
                 ->select(['jumlah' => 'sum(nilai_analisa_kriteria)'])
                 ->where(['kriteria_kedua' => $a])
                 ->asArray()
                 ->one();
 
-      return $sumKolom;
+        return $sumKolom;
     }
 
     public function jumlahBaris($a)
     {
-      $sumBaris = AnalisaKriteria::find()
+        $sumBaris = AnalisaKriteria::find()
                 ->select(['jumlah' => 'sum(hasil_analisa_kriteria)'])
                 ->where(['kriteria_pertama' => $a])
                 ->asArray()
                 ->one();
 
-      return $sumBaris;
+        return $sumBaris;
     }
 
     public function avg($a)
     {
-      $avg = AnalisaKriteria::find()
+        $avg = AnalisaKriteria::find()
                 ->select(['avg' => 'avg(hasil_analisa_kriteria)'])
                 ->where(['kriteria_pertama' => $a])
                 ->asArray()
                 ->one();
 
-      return $avg;
+        return $avg;
     }
 
-    function getIr($n) {
-  		switch ($n) {
-  		case 3:
-  			$r = 0.58;
-  			break;
-  		case 4:
-  			$r = 0.90;
-  			break;
-  		case 5:
-  			$r = 1.12;
-  			break;
-  		case 6:
-  			$r = 1.24;
-  			break;
-  		case 7:
-  			$r = 1.32;
-  			break;
-  		case 8:
-  			$r = 1.41;
-  			break;
-  		case 9:
-  			$r = 1.45;
-  			break;
-  		case 10:
-  			$r = 1.49;
-  			break;
-  		case 11:
-  			$r = 1.51;
-  			break;
-  		case 12:
-  			$r = 1.48;
-  			break;
-  		case 13:
-  			$r = 1.56;
-  			break;
-  		case 14:
-  			$r = 1.57;
-  			break;
-  		case 15:
-  			$r = 1.59;
-  			break;
+    public function getIr($n)
+    {
+        switch ($n) {
+        case 3:
+            $r = 0.58;
+            break;
+        case 4:
+            $r = 0.90;
+            break;
+        case 5:
+            $r = 1.12;
+            break;
+        case 6:
+            $r = 1.24;
+            break;
+        case 7:
+            $r = 1.32;
+            break;
+        case 8:
+            $r = 1.41;
+            break;
+        case 9:
+            $r = 1.45;
+            break;
+        case 10:
+            $r = 1.49;
+            break;
+        case 11:
+            $r = 1.51;
+            break;
+        case 12:
+            $r = 1.48;
+            break;
+        case 13:
+            $r = 1.56;
+            break;
+        case 14:
+            $r = 1.57;
+            break;
+        case 15:
+            $r = 1.59;
+            break;
 
-  		default:
-  			$r = 0.00;
-  			break;
-  		}
-  		return $r;
-  	}
+        default:
+            $r = 0.00;
+            break;
+        }
+        return $r;
+    }
+
+
+
+    /**
+     * menampilkan hasil analisa yang sudah dilakukan sebelumnya.
+     *
+     */
+    public function actionHasil()
+    {
+      // $query = AnalisaKriteria::find()
+      //       ->where([
+      //         'kriteria_pertama' => $a,
+      //         'kriteria_kedua' => $b,
+      //       ])
+      //       ->asArray()
+      //       ->all();
+
+      $query = DataKriteria::find()
+              ->orderBy(['id_kriteria' => SORT_ASC])
+              ->asArray()
+              ->all();
+
+      $getTabel = function ($a, $b) {
+        return $this->getTabel($a, $b);
+      };
+
+      $jumlahKolom = function ($a) {
+          return $this->jumlah($a);
+      };
+
+      $avg = function ($a) {
+        return $this->avg($a);
+      };
+      
+      $getIr = function ($n) {
+        return $this->getIr($n);
+      };
+
+      return $this->render('hasil', [
+          'query' => $query,
+          'getTabel' => $getTabel,
+          'jumlahKolom' => $jumlahKolom,
+          'avg' => $avg,
+          'getIr' => $getIr,
+      ]);
+    }
 
     /**
      * Deletes an existing AnalisaKriteria model.

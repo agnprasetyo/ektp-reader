@@ -102,10 +102,6 @@ HTML;
                         <?php
                           $jumlah = $jumlahKolom($value['id_kriteria']) ;
                           echo number_format($jumlah['jumlah'], 4, '.', ',');
-                          $inputJumlah($jumlah['jumlah'], $value['id_kriteria']);
-                          // if(empty($query[$key]['jumlah_kriteria'])) {
-                            $query[$key]['jumlah_kriteria'] = $jumlah['jumlah'];
-                          // }
                         ?>
                       </th>
                     <?php } ?>
@@ -132,12 +128,10 @@ HTML;
                         if ($baris['id_kriteria'] == $kolom['id_kriteria']) {
                           $data = $getTabel($baris['id_kriteria'], $kolom['id_kriteria']);
                           $hasil = $data['nilai_analisa_kriteria']/$kolom['jumlah_kriteria'];
-                          $inputHasil($hasil, $baris['id_kriteria'], $kolom['id_kriteria']);
                           echo number_format($hasil, 4, '.', ',');
                         } else {
                           $data = $getTabel($baris['id_kriteria'], $kolom['id_kriteria']);
                           $hasil = $data['nilai_analisa_kriteria']/$kolom['jumlah_kriteria'];
-                          $inputHasil($hasil, $baris['id_kriteria'], $kolom['id_kriteria']);
                           echo number_format($hasil, 4, '.', ',');
                         }
                         ?>
@@ -165,8 +159,6 @@ HTML;
           							<?php
                           $rata = $avg($baris['id_kriteria']);
                           echo number_format($rata['avg'], 4, '.', ',');
-                          $inputBobot($rata['avg'], $baris['id_kriteria']);
-                          $query[$key]['bobot_kriteria'] = $rata['avg'];
                         ?>
           						</th>
           						<th class="info">
