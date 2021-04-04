@@ -61,9 +61,6 @@ class Import extends \yii\base\Model
       }
 
       $attr = array_values($attr);
-      // print_r($attr);
-      // print_r($listidkriteria);exit;
-
       foreach($listData as $data) {
         for($i = 0; $i < count($attr); $i++) {
           $nama_kriteria = $attr[$i];

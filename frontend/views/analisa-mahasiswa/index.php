@@ -68,35 +68,35 @@ HTML;
 
 
             <div class="card-body">
-              <?php
+                <?php
 
-              $numb = [
-                'one', 'two', 'three', 'four', 'five',
-              ];
+                $numb = [
+                    'one', 'two', 'three', 'four', 'five',
+                ];
 
-              foreach ([
-                'Import Nilai Mahasiswa',
-                'Mulai Analisa',
-                'Hitung Indeks',
-                'Perangkingan',
-                'Pembuktian',
+                foreach ([
+                    'Import Nilai Mahasiswa',
+                    'Mulai Analisa',
+                    'Hitung Indeks',
+                    'Perangkingan',
+                    'Pembuktian',
                 ] as $key => $label) {
-                  echo Html::a($label, $session['regist'][$numb[$key]]['tab']['href'], [
-                    'class' => $session['regist'][$numb[$key]]['tab']['class'],
-                    'readonly' => $session['regist'][$numb[$key]]['tab']['disabled'],
-                    'disabled' => $session['regist'][$numb[$key]]['tab']['disabled'],
-                  ]);
-              }
-              ?>
+                    echo Html::a($label, $session['regist'][$numb[$key]]['tab']['href'], [
+                        'class' => $session['regist'][$numb[$key]]['tab']['class'],
+                        'readonly' => $session['regist'][$numb[$key]]['tab']['disabled'],
+                        'disabled' => $session['regist'][$numb[$key]]['tab']['disabled'],
+                    ]);
+                }
+                ?>
 
             </div>
-
-            <?php echo $this->render("_{$data['form']}", [
-              'model' => $model,
-              'data' => $data,
-              'other' => $other,
-              ]) ?>
 
         </div>
     </div>
 </div>
+
+<?php echo $this->render("_{$data['form']}", [
+    'model' => $model,
+    'data' => $data,
+    'other' => $other,
+]) ?>

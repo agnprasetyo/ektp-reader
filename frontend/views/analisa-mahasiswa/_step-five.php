@@ -79,11 +79,11 @@ HTML;
                       <tr>
                         <td class="active"><?= $baris['nama'] ?></td>
                         <td class="active"><?php echo number_format($baris['qi'], 4, '.', ','); ?></td>
-                        <td class="bg-primary text-white text-center"><?=$ranking1++?></td>
+                        <td class="table-primary text-center"><?=$ranking1++?></td>
                         <td class="active"><?php echo number_format($baris['qii'], 4, '.', ','); ?></td>
-                        <td class="bg-primary text-white text-center"><?=$ranking2++?></td>
+                        <td class="table-primary text-center"><?=$ranking2++?></td>
                         <td class="active"><?php echo number_format($baris['qiii'], 4, '.', ','); ?>
-                        <td class="bg-primary text-white text-center"><?=$ranking3++?></td>
+                        <td class="table-primary text-center"><?=$ranking3++?></td>
             					</tr>
                     <?php } ?>
                   </tbody>

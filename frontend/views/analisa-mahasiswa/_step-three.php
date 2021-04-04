@@ -53,132 +53,164 @@ HTML;
 <div class="--floating-container">
     <div class="--floating-row">
         <?php
-            echo Html::a("Next <i class='fa fa-arrow-right ml-2'></i>", [''], [
-              "class" => "--btn-float btn-primary btn btn-lg",
-              "data-method" => "post",
-            ])
-        ?>
+    echo Html::a("Next <i class='fa fa-arrow-right ml-2'></i>", [''], [
+      "class" => "--btn-float btn-primary btn btn-lg",
+      "data-method" => "post",
+    ])
+    ?>
     </div>
 </div>
 
+<?php
+
+$js = <<< JS
+
+		$(".--floating-container").show();
+
+		$(".--floating-container").click(function () {
+			$(".--floating-container").hide();
+			$("#--content").hide();
+			$("#--progress").show();
+		});
+JS;
+$this->registerJs($js);
+
+?>
+
 <div class="row">
     <div class="col-12">
+
         <div class="card">
             <div class="card-body">
-              <div class="row">
-        				<div class="col-md-6 text-left">
-        					<strong style="font-size:18pt;"><span class="fa fa-table"></span> Alternatif Menurut Kriteria</strong>
-        				</div>
-        				<div class="col-md-6 text-right">
-        					<form method="post">
-        	          <button name="hapus" class="btn btn-danger">Hapus Semua Data</button>
-        					</form>
-        				</div>
-        			</div>
-                <br/>
 
-                <table width="100%" class="table table-striped table-bordered">
-                  <thead>
-                    <tr>
-                      <th class="text-center active">Alternatif</th>
-                      <th>Hasil Si</th>
-                      <th>Hasil Ri</th>
-                      <th>Hasil Qi</th>
-                      <th>Hasil Qii</th>
-                      <th>Hasil Qiii</th>
-                    </tr>
+                <div id="--progress" class="py-4" style="display: none;">
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-primary progress-bar-striped progress-bar-animated"
+                            role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"
+                            style="width: 100%;">
+                            <span class="sr-only">Loading</span>
+                        </div>
+                    </div>
+                </div>
 
-                  </thead>
-                  <tbody>
+                <div id="--content">
+                    <div class="row">
+                        <div class="col-md-6 text-left">
+                            <strong style="font-size:18pt;"><span class="fa fa-table"></span> Alternatif Menurut
+                                Kriteria</strong>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <form method="post">
+                                <button name="hapus" class="btn btn-danger">Hapus Semua Data</button>
+                            </form>
+                        </div>
+                    </div>
+                    <br />
 
-                    <?php
-                      // foreach ($dataMahasiswa as $b) {
-                      //   foreach ($dataKriteria as $k) {
-                      //       $bobot = $getSkor($b['id'], $k['id_kriteria']);
-                      //       $hasil = $bobot['bobot'] * $k['bobot_kriteria'];
-                      //
-                      //       $normalisasi = $inputNormalisasi($hasil, $b['id'], $k['id_kriteria']);
-                      //   }
-                      //
-                      //   $si = $jumlah($b['id']);
-                      //   $satu = $inputSi($si['jumlah'], $b['id']);
-                      //
-                      //   // $dataMahasiswa[$key]['si'] = $si['jumlah'];
-                      //
-                      //   $ri = $terbesar($b['id']);
-                      //   $dua = $inputRi($ri['max'], $b['id']);
-                      // }
-                    ?>
+                    <table width="100%" class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="text-center active">Alternatif</th>
+                                <th>Hasil Si</th>
+                                <th>Hasil Ri</th>
+                                <th>Hasil Qi</th>
+                                <th>Hasil Qii</th>
+                                <th>Hasil Qiii</th>
+                            </tr>
 
-                    <?php foreach ($dataMahasiswa as $key => $baris) { ?>
-                      <tr>
-                        <th class="active"><?=$baris['nama']?></th>
-                        <td>
-                          <?php
-                          $si = $jumlah($baris['id']);
-                          $satu = $inputSi($si['jumlah'], $baris['id']);
-                          echo number_format($si['jumlah'], 4, '.', ',');
-                          ?>
-                        </td>
-                        <td>
-                          <?php
-                          $ri = $terbesar($baris['id']);
-                          $dua = $inputRi($ri['max'], $baris['id']);
-                          echo number_format($ri['max'], 4, '.', ',');?>
-                        </td>
-                        <td>
-                          <?php
-                            $maxSi = $utility($baris['id']);
-                            $maxRi = $regret($baris['id']);
-                            $minSi = $utility($baris['id']);
-                            $minRi = $regret($baris['id']);
+                        </thead>
+                        <tbody>
 
-                            // echo "Si1 : ";print_r($si['jumlah']);
-                            // echo " || Si2 : ";print_r($baris['si']);
-                            // echo " || MinSi : ";print_r($minSi['smallest']);
-                            // echo " || MaxSi : ";print_r($maxSi['largest']);
-                            //
-                            // echo " || Ri : ";print_r($ri['max']);
-                            // echo " || MinRi : ";print_r($minRi['smallest']);
-                            // echo " || MaxRi : ";print_r($maxRi['largest']);
-                            // exit;
+                            <?php
+              // foreach ($dataMahasiswa as $b) {
+              //   foreach ($dataKriteria as $k) {
+              //       $bobot = $getSkor($b['id'], $k['id_kriteria']);
+              //       $hasil = $bobot['bobot'] * $k['bobot_kriteria'];
+              //
+              //       $normalisasi = $inputNormalisasi($hasil, $b['id'], $k['id_kriteria']);
+              //   }
+              //
+              //   $si = $jumlah($b['id']);
+              //   $satu = $inputSi($si['jumlah'], $b['id']);
+              //
+              //   // $dataMahasiswa[$key]['si'] = $si['jumlah'];
+              //
+              //   $ri = $terbesar($b['id']);
+              //   $dua = $inputRi($ri['max'], $b['id']);
+              // }
+              ?>
 
-                            $qi = (0.5*(($baris['si']-$minSi['smallest'])/($maxSi['largest']-$minSi['smallest'])))+((1-0.5)*(($ri['max']-$minRi['smallest'])/($maxRi['largest']-$minRi['smallest'])));
+                            <?php foreach ($dataMahasiswa as $key => $baris) { ?>
+                            <tr>
+                                <th class="active"><?= $baris['nama'] ?></th>
+                                <td>
+                                    <?php
+                                        $si = $jumlah($baris['id']);
+                                        $satu = $inputSi($si['jumlah'], $baris['id']);
+                                        echo number_format($si['jumlah'], 4, '.', ',');
+                                        ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php
+                                        $ri = $terbesar($baris['id']);
+                                        $dua = $inputRi($ri['max'], $baris['id']);
+                                        echo number_format($ri['max'], 4, '.', ','); ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php
+                                        $maxSi = $utility($baris['id']);
+                                        $maxRi = $regret($baris['id']);
+                                        $minSi = $utility($baris['id']);
+                                        $minRi = $regret($baris['id']);
 
-                            $qii = (0.45*(($si['jumlah']-$minSi['smallest'])/($maxSi['largest']-$minSi['smallest'])))+((1-0.45)*(($ri['max']-$minRi['smallest'])/($maxRi['largest']-$minRi['smallest'])));
-                            $qiii = (0.55*(($si['jumlah']-$minSi['smallest'])/($maxSi['largest']-$minSi['smallest'])))+((1-0.55)*(($ri['max']-$minRi['smallest'])/($maxRi['largest']-$minRi['smallest'])));
-                            echo number_format($qi, 4, '.', ',');
+                                        // echo "Si1 : ";print_r($si['jumlah']);
+                                        // echo " || Si2 : ";print_r($baris['si']);
+                                        // echo " || MinSi : ";print_r($minSi['smallest']);
+                                        // echo " || MaxSi : ";print_r($maxSi['largest']);
+                                        //
+                                        // echo " || Ri : ";print_r($ri['max']);
+                                        // echo " || MinRi : ";print_r($minRi['smallest']);
+                                        // echo " || MaxRi : ";print_r($maxRi['largest']);
+                                        // exit;
 
-                            $tiga = $inputQi($qi, $qii, $qiii, $baris['id']);
-                          ?>
-                        </td>
-                        <td><?= number_format($qii, 4, '.', ','); ?></td>
-                        <td><?= number_format($qiii, 4, '.', ','); ?></td>
-                      </tr>
-                    <?php } ?>
-                  </tbody>
+                                        $qi = (0.5 * (($baris['si'] - $minSi['smallest']) / ($maxSi['largest'] - $minSi['smallest']))) + ((1 - 0.5) * (($ri['max'] - $minRi['smallest']) / ($maxRi['largest'] - $minRi['smallest'])));
 
-                  <tfoot>
-                    <tr class="info">
-                      <th>Maksimal</th>
-                        <td><?= number_format($maxSi['largest'], 4, '.', ','); ?></td>
-                        <td><?= number_format($maxRi['largest'], 4, '.', ','); ?></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr class="info">
-                      <th>Minimal</th>
-                        <td><?= number_format($minSi['smallest'], 4, '.', ','); ?></td>
-                        <td><?= number_format($minRi['smallest'], 4, '.', ','); ?></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                  </tfoot>
-                </table>
+                                        $qii = (0.45 * (($si['jumlah'] - $minSi['smallest']) / ($maxSi['largest'] - $minSi['smallest']))) + ((1 - 0.45) * (($ri['max'] - $minRi['smallest']) / ($maxRi['largest'] - $minRi['smallest'])));
+                                        $qiii = (0.55 * (($si['jumlah'] - $minSi['smallest']) / ($maxSi['largest'] - $minSi['smallest']))) + ((1 - 0.55) * (($ri['max'] - $minRi['smallest']) / ($maxRi['largest'] - $minRi['smallest'])));
+                                        echo number_format($qi, 4, '.', ',');
 
-          </div>
-      </div>
-  </div>
+                                        $tiga = $inputQi($qi, $qii, $qiii, $baris['id']);
+                                    ?>
+                                </td>
+                                <td><?= number_format($qii, 4, '.', ','); ?></td>
+                                <td><?= number_format($qiii, 4, '.', ','); ?></td>
+                            </tr>
+                            <?php } ?>
+                        </tbody>
+
+                        <tfoot>
+                            <tr class="info">
+                                <th>Maksimal</th>
+                                <td><?= number_format($maxSi['largest'], 4, '.', ','); ?></td>
+                                <td><?= number_format($maxRi['largest'], 4, '.', ','); ?></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr class="info">
+                                <th>Minimal</th>
+                                <td><?= number_format($minSi['smallest'], 4, '.', ','); ?></td>
+                                <td><?= number_format($minRi['smallest'], 4, '.', ','); ?></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
 </div>
