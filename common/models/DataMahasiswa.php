@@ -44,7 +44,8 @@ class DataMahasiswa extends \yii\db\ActiveRecord
     {
         return [
             [['nama', 'nik'], 'required'],
-            [['id'], 'integer'],
+            [['id',], 'integer'],
+            [['qi'], 'number'],
             [['nik'], 'string', 'max' => 16],
             [['nama', 'alamat', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'agama', 'status', 'pekerjaan', 'berlaku_hingga', 'nim', 'jenjang', 'jurusan', 'fakultas', 'status_mhs'], 'string', 'max' => 255],
             [['id'], 'unique'],
@@ -68,11 +69,12 @@ class DataMahasiswa extends \yii\db\ActiveRecord
             'status' => 'Status',
             'pekerjaan' => 'Pekerjaan',
             'berlaku_hingga' => 'Berlaku Hingga',
-            'nim' => 'Nim',
+            'nim' => 'NIM',
             'jenjang' => 'Jenjang',
             'jurusan' => 'Jurusan',
             'fakultas' => 'Fakultas',
             'status_mhs' => 'Status Mhs',
+            'qi' => 'Hasil Akhir',
         ];
     }
 

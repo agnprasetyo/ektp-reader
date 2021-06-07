@@ -6,18 +6,16 @@ use Yii;
 use common\models\AnalisaAlternatif;
 use common\models\DataKriteria;
 use common\models\DataMahasiswa;
-// use common\models\HasilAnalisa;
-use common\models\import\Import;
 use common\models\import\UploadFileImportItem;
 use common\models\KonversiNilai;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
+use yii\web\Response;
+use yii\web\UploadedFile;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
-use yii\web\Response;
-use yii\web\UploadedFile;
 
 /**
  * AnalisaMahasiswaController implements the CRUD actions for AnalisaMahasiswa model.
@@ -100,7 +98,7 @@ class AnalisaMahasiswaController extends Controller
                 $spreadsheetData = $spreadsheet->getActiveSheet()->toArray();
 
                 if (count($spreadsheetData) > 1) {
-                    // for ($i = 0; $i < 1; $i++) {
+                    // for ($i = 0; $i <span 1; $i++) {
                     //     unset($spreadsheetData[$i]);
                     // }
 
@@ -138,6 +136,11 @@ class AnalisaMahasiswaController extends Controller
         // dd($data);
 
         $html = "<td>{$inc}</td>";
+
+
+        $__html = "<td><span class='badge badge-success'>Success</span></td>";
+        $desc = "Success";
+        $class = "success";
         if (!empty($data)) {
 
             $_htmlRaw = [];
@@ -151,58 +154,70 @@ class AnalisaMahasiswaController extends Controller
 
             foreach ($datasKriteria as $key => $value) {
 
-                $attr = $value->nama_kriteria;
-                if (isset($data[$attr])) {
-                    $datakonversi = KonversiNilai::findOne([
-                        'nama_kriteria' => $value->nama_kriteria,
-                        'nilai_awal' => $data[$attr],
-                    ]);
+                if (isset($data['id_mahasiswa'])) {
 
-                    if ($datakonversi) {
-                        $konversi[$attr][$data[$attr]] = $datakonversi->nilai_konversi;
+                    $_model = DataMahasiswa::findOne($data['id_mahasiswa']);
+                    if ($_model) {
 
-                        $_htmlRaw[$attr] = "<td><span class='badge badge-success'>{$data[$attr]} => {$konversi[$attr][$data[$attr]]}</span></td>";
-                    }
-                }
+                        $attr = $value->nama_kriteria;
+                        if (isset($data[$attr])) {
+                            $datakonversi = KonversiNilai::findOne([
+                                'nama_kriteria' => $value->nama_kriteria,
+                                'nilai_awal' => $data[$attr],
+                            ]);
 
-                $searchdata = AnalisaAlternatif::findOne([
-                    'id_alternatif' => $data['id_mahasiswa'],
-                    'id_kriteria' => $value->id_kriteria,
-                ]);
+                            if ($datakonversi) {
+                                $konversi[$attr][$data[$attr]] = $datakonversi->nilai_konversi;
+                                $_htmlRaw[$attr] = "<td><span class='badge badge-success'>{$data[$attr]} => {$konversi[$attr][$data[$attr]]}</span></td>";
+                            }
+                        }
 
-                if (!$searchdata) {
-                    $model = new AnalisaAlternatif;
+                        $_htmlRaw['id_mahasiswa'] = "<td><span class='badge badge-success'>{$data['id_mahasiswa']}</span></td>";
 
-                    $model->id_alternatif = $data['id_mahasiswa'];
-                    $model->id_kriteria = $value->id_kriteria;
-                    $model->nilai = isset($konversi[$attr][$data[$attr]]) ? $konversi[$attr][$data[$attr]] : null;
-                    $model->bobot = 0;
-                    $model->normalisasi = 0;
-                    $model->save();
-                } else {
-
-                    if (isset($konversi[$attr][$data[$attr]])) {
-                        $searchdata->updateAttributes([
-                            'nilai' => $konversi[$attr][$data[$attr]],
+                        $searchdata = AnalisaAlternatif::findOne([
+                            'id_alternatif' => $data['id_mahasiswa'],
+                            'id_kriteria' => $value->id_kriteria,
                         ]);
+
+                        if (!$searchdata) {
+                            $model = new AnalisaAlternatif();
+                            $model->id_alternatif = $data['id_mahasiswa'];
+                            $model->id_kriteria = $value->id_kriteria;
+                            $model->nilai = isset($konversi[$attr][$data[$attr]]) ? $konversi[$attr][$data[$attr]] : 0;
+                            $model->bobot = 0;
+                            $model->normalisasi = 0;
+                            $model->save();
+                        } else {
+
+                            if (isset($konversi[$attr][$data[$attr]])) {
+                                $searchdata->updateAttributes([
+                                    'nilai' => $konversi[$attr][$data[$attr]],
+                                ]);
+                            }
+                            $searchdata->updateAttributes([
+                                'bobot' => 0,
+                                'normalisasi' => 0
+                            ]);
+                        }
+                    } else {
+                        $desc = "Error";
+                        $class = "danger";
+
+                        $__html = "<td><span class='badge badge-danger'>Error</span></td>";
                     }
-                    $searchdata->updateAttributes([
-                        'bobot' => 0,
-                        'normalisasi' => 0
-                    ]);
                 }
             }
 
-            $html .= "<td><span class='badge badge-success'>Success</span></td>";
+            $html .= $__html;
             foreach ($_htmlRaw as $value) {
                 $html .= $value;
             }
 
             return [
                 'code' => 200,
-                'description' => "Success",
+                'description' => $desc,
                 'data' => [
-                    'class' => "success",
+                    'class' => $class,
                     'html'  => $html,
                 ],
             ];
@@ -257,22 +272,6 @@ class AnalisaMahasiswaController extends Controller
             ->orderBy(['id' => SORT_ASC])
             ->all();
 
-        // $getSkor = function ($a, $b) {
-        //     return $this->getSkor($a, $b);
-        // };
-
-        // $nilai = function ($a) {
-        //     return $this->nilai($a);
-        // };
-
-        // $inputBobot = function ($a, $b, $c) {
-        //     return $this->inputBobot($a, $b, $c);
-        // };
-
-        // $inputNormalisasi = function ($a, $b, $c) {
-        //     return $this->inputNormalisasi($a, $b, $c);
-        // };
-
         if (Yii::$app->request->isPost) {
             $_session['two']['valid'] = true;
             $session['regist'] = ArrayHelper::merge($session['regist'], $_session);
@@ -286,50 +285,9 @@ class AnalisaMahasiswaController extends Controller
             'other' => [
                 'dataKriteria' => $dataKriteria,
                 'dataMahasiswa' => $dataMahasiswa,
-                // 'inputBobot' => $inputBobot,
-                // 'getSkor' => $getSkor,
-                // 'nilai' => $nilai,
-                // 'inputNormalisasi' => $inputNormalisasi,
             ],
         ]);
     }
-
-    public function getSkor($a, $b)
-    {
-        $query = AnalisaAlternatif::find()
-            ->where([
-                'id_alternatif' => $a,
-                'id_kriteria' => $b,
-            ])
-            ->asArray()
-            ->one();
-
-        return $query;
-    }
-
-    // public function nilai($a)
-    // {
-    //     $nilaiKriteria = AnalisaAlternatif::find()
-    //         ->select([
-    //             'largest' => 'max(nilai)',
-    //             'smallest' => 'min(nilai)'
-    //         ])
-    //         ->where(['id_kriteria' => $a])
-    //         ->asArray()
-    //         ->one();
-
-    //     return $nilaiKriteria;
-    // }
-
-    //input hasil bobot
-    // public function inputBobot($a, $b, $c)
-    // {
-    //     $model = AnalisaAlternatif::findOne(['id_alternatif' => $b, 'id_kriteria' => $c]);
-    //     $model->updateAttributes(['bobot' => $a]);
-
-    //     return $model;
-    // }
-
 
     //Menghitung indeks VIKOR
     public function actionStepThree()
@@ -361,42 +319,11 @@ class AnalisaMahasiswaController extends Controller
 
         $dataMahasiswa = DataMahasiswa::find()
             ->orderBy(['id' => SORT_ASC])
-            ->asArray()
             ->all();
 
         $dataKriteria = DataKriteria::find()
             ->orderBy(['id_kriteria' => SORT_ASC])
-            ->asArray()
             ->all();
-
-        $jumlah = function ($a) {
-            return $this->jumlah($a);
-        };
-
-        $terbesar = function ($a) {
-            return $this->terbesar($a);
-        };
-
-        $getSkor = function ($a, $b) {
-            return $this->getSkor($a, $b);
-        };
-
-        $utility = function () {
-            return $this->utility();
-        };
-        $regret = function () {
-            return $this->regret();
-        };
-
-        $inputSi = function ($a, $b) {
-            return $this->inputSi($a, $b);
-        };
-        $inputRi = function ($a, $b) {
-            return $this->inputRi($a, $b);
-        };
-        $inputQi = function ($a, $b, $c, $d) {
-            return $this->inputQi($a, $b, $c, $d);
-        };
 
         if (Yii::$app->request->isPost) {
             $_session['three']['valid'] = true;
@@ -411,108 +338,8 @@ class AnalisaMahasiswaController extends Controller
             'other' => [
                 'dataMahasiswa' => $dataMahasiswa,
                 'dataKriteria' => $dataKriteria,
-                'jumlah' => $jumlah,
-                'terbesar' => $terbesar,
-                'getSkor' => $getSkor,
-                'utility' => $utility,
-                'regret' => $regret,
-
-                'inputSi' => $inputSi,
-                'inputRi' => $inputRi,
-                'inputQi' => $inputQi,
             ],
         ]);
-    }
-
-    //mengambil nilai Si
-    public function jumlah($a)
-    {
-        $sumKolom = AnalisaAlternatif::find()
-            ->select(['jumlah' => 'sum(normalisasi)'])
-            ->where(['id_alternatif' => $a])
-            ->asArray()
-            ->one();
-
-        return $sumKolom;
-    }
-
-    //mengambil nilai Ri
-    public function terbesar($a)
-    {
-        $maxBobot = AnalisaAlternatif::find()
-            ->select(['max' => 'max(normalisasi)'])
-            ->where(['id_alternatif' => $a])
-            ->asArray()
-            ->one();
-
-        return $maxBobot;
-    }
-
-    public function utility()
-    {
-        $utility = DataMahasiswa::find()
-            ->select([
-                'largest' => 'max(si)',
-                'smallest' => 'min(si)'
-            ])
-            // ->where(['id_alternatif' => $a])
-            ->asArray()
-            ->one();
-
-        return $utility;
-    }
-
-    public function regret()
-    {
-        $utility = DataMahasiswa::find()
-            ->select([
-                'largest' => 'max(ri)',
-                'smallest' => 'min(ri)'
-            ])
-            // ->where(['id_alternatif' => $a])
-            ->asArray()
-            ->one();
-
-        return $utility;
-    }
-
-    //input hasil normalisasi (bobot kriteria*bobot alternatif)
-    // public function inputNormalisasi($a, $b, $c)
-    // {
-    //     $model = AnalisaAlternatif::findOne(['id_alternatif' => $b, 'id_kriteria' => $c]);
-    //     $model->updateAttributes(['normalisasi' => $a]);
-
-    //     return $model;
-    // }
-
-    //update hasil
-    public function inputSi($a, $b)
-    {
-        $model = DataMahasiswa::findOne(['id' => $b]);
-        // if($model == null) {
-        //   var_dump($b);exit;
-        // }
-        $model->updateAttributes(['si' => $a]);
-
-        return $model;
-    }
-
-    public function inputRi($a, $b)
-    {
-        $model = DataMahasiswa::findOne(['id' => $b]);
-        $model->updateAttributes(['ri' => $a]);
-
-        return $model;
-    }
-
-    public function inputQi($a, $b, $c, $d)
-    {
-        $model = DataMahasiswa::findOne(['id' => $d]);
-        $model->updateAttributes(['qi' => $a]);
-        $model->updateAttributes(['qii' => $b]);
-        $model->updateAttributes(['qiii' => $c]);
-
-        return $model;
     }
 
     public function actionStepFour()
@@ -587,15 +414,26 @@ class AnalisaMahasiswaController extends Controller
 
         $session['regist'] = ArrayHelper::merge($session['regist'], $_session);
 
-        $dataMahasiswa = DataMahasiswa::find()
-            ->orderBy([
-                'qi'   => SORT_ASC,
-                'qii'  => SORT_ASC,
-                'qiii' => SORT_ASC,
-            ])
-            ->asArray()
-            ->all();
-        // $dataMahasiswa = DataMahasiswa::find(['qi' => SORT_ASC])->all();
+        // $dataMahasiswa = DataMahasiswa::find()
+        //     ->orderBy([
+        //         'qi'   => SORT_ASC,
+        //         'qii'  => SORT_ASC,
+        //         'qiii' => SORT_ASC,
+        //     ])
+        //     ->asArray()
+        //     ->all();
+        
+        $urutan1 = DataMahasiswa::find()
+                ->orderBy(['qi'=>SORT_ASC])
+                ->all();
+
+        $urutan2 = DataMahasiswa::find()
+                ->orderBy(['qii'=>SORT_ASC])
+                ->all();
+
+        $urutan3 = DataMahasiswa::find()
+                ->orderBy(['qiii'=>SORT_ASC])
+                ->all();
 
         if (Yii::$app->request->isPost) {
             $_session['five']['valid'] = true;
@@ -608,7 +446,10 @@ class AnalisaMahasiswaController extends Controller
             'model' => [],
             'data' => $data,
             'other' => [
-                'dataMahasiswa' => $dataMahasiswa,
+                // 'dataMahasiswa' => $dataMahasiswa,
+                'urutan1' => $urutan1,
+                'urutan2' => $urutan2,
+                'urutan3' => $urutan3,
             ],
         ]);
     }

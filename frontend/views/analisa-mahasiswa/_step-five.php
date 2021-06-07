@@ -51,45 +51,50 @@ HTML;
     <div class="col-12">
         <div class="card">
             <div class="card-body">
-              <div class="row">
-        				<div class="col-md-6 text-left">
-        					<strong style="font-size:18pt;"><span class="fa fa-table"></span> Alternatif Menurut Kriteria</strong>
-        				</div>
-        				<div class="col-md-6 text-right">
-        					<form method="post">
-        	          <button name="hapus" class="btn btn-danger">Hapus Semua Data</button>
-        					</form>
-        				</div>
-        			</div>
-                <br/>
+                <div class="row">
+                    <div class="col-md-6 text-left">
+                        <strong style="font-size:18pt;"><span class="fa fa-table"></span> Alternatif Menurut
+                            Kriteria</strong>
+                    </div>
+                    <!-- <div class="col-md-6 text-right">
+                        <form method="post">
+                            <button name="hapus" class="btn btn-danger">Hapus Semua Data</button>
+                        </form>
+                    </div> -->
+                </div>
+                <br />
                 <table width="100%" class="table table-striped table-bordered">
-                  <thead>
-                      <tr>
-                        <th class="text-center active">Alternatif</th>
-                        <th class="text-center active">Bobot V = 0.5</th>
-                        <th class="text-center active">Peringkat</th>
-                        <th class="text-center active">Bobot V = 0.44</th>
-                        <th class="text-center active">Peringkat</th>
-                        <th class="text-center active">Bobot V = 0.56</th>
-                        <th class="text-center active">Peringkat</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                    <?php $ranking1 = 1; $ranking2 = 1; $ranking3 = 1; foreach ($dataMahasiswa as $baris) { ?>
-                      <tr>
-                        <td class="active"><?= $baris['nama'] ?></td>
-                        <td class="active"><?php echo number_format($baris['qi'], 4, '.', ','); ?></td>
-                        <td class="table-primary text-center"><?=$ranking1++?></td>
-                        <td class="active"><?php echo number_format($baris['qii'], 4, '.', ','); ?></td>
-                        <td class="table-primary text-center"><?=$ranking2++?></td>
-                        <td class="active"><?php echo number_format($baris['qiii'], 4, '.', ','); ?>
-                        <td class="table-primary text-center"><?=$ranking3++?></td>
-            					</tr>
-                    <?php } ?>
-                  </tbody>
+                    <thead>
+                        <tr>
+                            <th class="text-center active">Alternatif</th>
+                            <th class="text-center active">Bobot V = 0.5</th>
+                            <th class="text-center active">Peringkat</th>
+                            <th class="text-center active">Alternatif</th>
+                            <th class="text-center active">Bobot V = 0.44</th>
+                            <th class="text-center active">Peringkat</th>
+                            <th class="text-center active">Alternatif</th>
+                            <th class="text-center active">Bobot V = 0.56</th>
+                            <th class="text-center active">Peringkat</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php $ranking1 = 1; $ranking2 = 1; $ranking3 = 1; foreach ($urutan1 as $baris) { ?>
+                        <tr>
+                            <td class="active"><?= $baris['nama'] ?></td>
+                            <td class="active"><?php echo number_format($baris['qi'], 4, '.', ','); ?></td>
+                            <td class="table-primary text-center"><?=$ranking1++?></td>
+                            <td class="active"><?= $baris['nama'] ?></td>
+                            <td class="active"><?php echo number_format($baris['qii'], 4, '.', ','); ?></td>
+                            <td class="table-primary text-center"><?=$ranking2++?></td>
+                            <td class="active"><?= $baris['nama'] ?></td>
+                            <td class="active"><?php echo number_format($baris['qiii'], 4, '.', ','); ?>
+                            <td class="table-primary text-center"><?=$ranking3++?></td>
+                        </tr>
+                        <?php } ?>
+                    </tbody>
                 </table>
 
-          </div>
-      </div>
-  </div>
+            </div>
+        </div>
+    </div>
 </div>

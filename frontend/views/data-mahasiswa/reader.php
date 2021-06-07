@@ -40,8 +40,9 @@ HTML;
         <div class="card-deck-wrapper">
 
             <div id="app" class="card-deck">
-                <div class="card col-md-3 p-2">
-                  FOTO
+                <div class="card col-md-3 p-5">
+                    <label for="url">Status Koneksi dengan Server :</label>
+                    <p>{{ statusMessage }}</p>
                 </div>
                 <div class="card col-md-9">
                     <div class="card-body">
@@ -65,11 +66,33 @@ HTML;
                             </tr>
                             <tr>
                                 <td>
-                                    <b>Status</b>
+                                    <b>NIM</b>
                                 </td>
                                 <td> : </td>
-                                <td> {{ statusMessage }}</td>
+                                <td> {{ db.nim }}</td>
                             </tr>
+                            <tr>
+                                <td>
+                                    <b>Prodi</b>
+                                </td>
+                                <td> : </td>
+                                <td> {{ db.jurusan }}</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <b>Fakultas</b>
+                                </td>
+                                <td> : </td>
+                                <td> {{ db.fakultas }}</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <b>Status Beasiswa</b>
+                                </td>
+                                <td> : </td>
+                                <td> {{ db.qi }}</td>
+                            </tr>
+                            
 
                         </table>
 

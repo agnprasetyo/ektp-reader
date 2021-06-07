@@ -5,11 +5,15 @@ namespace frontend\controllers;
 use Yii;
 use common\models\DataMahasiswa;
 use common\models\import\ImportMahasiswa;
+use common\models\import\UploadFileImportItem;
 use frontend\models\DataMahasiswaSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
+use yii\web\UploadedFile;
+use yii\web\Response;
 
 /**
  * DataMahasiswaController implements the CRUD actions for DataMahasiswa model.
@@ -20,25 +24,25 @@ class DataMahasiswaController extends Controller
     /**
      * {@inheritdoc}
      */
-     public function behaviors()
-     {
-         return [
-           'access' => [
-               'class' => AccessControl::className(),
-               'rules' => [
-                   [
-                       'allow' => Yii::$app->assign->isAdministrator(),
-                   ],
-               ],
-             ],
-             'verbs' => [
-                 'class' => VerbFilter::className(),
-                 'actions' => [
-                     'delete' => ['POST'],
-                 ],
-             ],
-         ];
-     }
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => Yii::$app->assign->isAdministrator(),
+                    ],
+                ],
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['POST'],
+                ],
+            ],
+        ];
+    }
 
     /**
      * Lists all DataMahasiswa models.
@@ -69,22 +73,149 @@ class DataMahasiswaController extends Controller
     }
 
     //import data mahasiswa
-    public function actionImport()
+    public function actionImport($dl = 0)
     {
-        $request = Yii::$app->request;
-        $model = new ImportMahasiswa();
-        if ($request->isPost) {
-          if ($model->load($request->post())) {
-            if ($model->save()) {
-              return $this->redirect(['index']);
+        if ($dl == 1) {
+            $base = Yii::getAlias('@frontend/runtime/uploads/import.xlsx');
+
+            return Yii::$app->response->sendFile($base, 'Template Import Items ' . date('YmdHis') . '.xlsx');
+        }
+
+        $model = new UploadFileImportItem();
+
+        $spreadsheetData = [];
+        if ($model->load(Yii::$app->request->post())) {
+            $model->file = UploadedFile::getInstance($model, 'file');
+
+            if ($model->file) {
+                $xlsx = $model->file->tempName;
+                $reader = new Xlsx();
+                $spreadsheet = $reader->load($xlsx);
+                $spreadsheetData = $spreadsheet->getActiveSheet()->toArray();
+
+                if (count($spreadsheetData) > 1) {
+                    // for ($i = 0; $i < 1; $i++) {
+                    //     unset($spreadsheetData[$i]);
+                    // }
+
+                    // dd($spreadsheetData);
+
+                    Yii::$app->session->setFlash('success', 'Berhasil mengunggah file.');
+                } else {
+                    Yii::$app->session->setFlash('error', 'Minimal terdapat 1 record data.');
+
+                    return $this->refresh();
+                }
+            } else {
+                Yii::$app->session->setFlash('error', 'Gagal mengunggah file.');
             }
-          }
         }
 
 
         return $this->render('import', [
             'model' => $model,
+            'other' => $spreadsheetData,
         ]);
+    }
+
+    /**
+     * 
+     */
+    public function actionProsesImport($inc = 0)
+    {
+        $request = Yii::$app->request;
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $data = $request->post('data');
+        // $attributes = array_keys($data);
+
+        // dd($data);
+
+        $html = "<td>{$inc}</td>";
+        if (!empty($data)) {
+
+
+            $__html = "<td><span class='badge badge-success'>Success</span></td>";
+            $desc = "Success";
+            $class = "success";
+
+            $_htmlRaw = [];
+            foreach ($data as $key => $value) {
+                $_htmlRaw[$key] = "<td><span class='badge badge-danger'>{$value}</span></td>";
+            }
+
+            if (isset($data['nik'])) {
+                $datasMahasiswa = DataMahasiswa::findOne(['nik' => $data['nik']]);
+
+                if (!$datasMahasiswa) {
+                    $model = new DataMahasiswa;
+
+                    $model->id = (int) $model::find()->max('id') + 1;
+                    $model->nik = $data['nik'];
+                    $model->nama = $data['nama'];
+                    $model->alamat = null;
+                    $model->si = 0;
+                    $model->ri = 0;
+                    $model->qi = 0;
+                    $model->qii = 0;
+                    $model->qiii = 0;
+
+                    if ($model->save()) {
+                        $_htmlRaw['nik'] = "<td><span class='badge badge-success'>{$data['nik']}</span></td>";
+                        $_htmlRaw['nama'] = "<td><span class='badge badge-success'>{$data['nama']}</span></td>";
+                    }
+                } else {
+
+                    $datasMahasiswa->updateAttributes([
+                        'nik' => $data['nik'],
+                        'nama' => $data['nama'],
+                        'alamat' => null,
+                        'si' => 0,
+                        'ri' => 0,
+                        'qi' => 0,
+                        'qii' => 0,
+                        'qiii' => 0
+                    ]);
+
+                    $_htmlRaw['nik'] = "<td><span class='badge badge-warning'>{$data['nik']}</span></td>";
+                    $_htmlRaw['nama'] = "<td><span class='badge badge-warning'>{$data['nama']}</span></td>";
+
+                    $desc = "Updated";
+                    $class = "warning";
+
+                    $__html = "<td><span class='badge badge-warning'>Update</span></td>";
+                }
+            } else {
+                $desc = "Error";
+                $class = "danger";
+
+                $__html = "<td><span class='badge badge-danger'>Error</span></td>";
+            }
+
+            $html .= $__html;
+            foreach ($_htmlRaw as $value) {
+                $html .= $value;
+            }
+
+            return [
+                'code' => 200,
+                'description' => $desc,
+                'data' => [
+                    'class' => $class,
+                    'html'  => $html,
+                ],
+            ];
+        }
+
+        return [
+            'code' => 401,
+            'description' => 'No Data',
+            'data' => [
+                'class' => 'danger',
+                'html'  => "<td colspan='2'><span class='badge badge-danger'>Error</span></td>
+				<td colspan='" . count($data) . "'>No Data</td>",
+            ],
+        ];
     }
 
     /**

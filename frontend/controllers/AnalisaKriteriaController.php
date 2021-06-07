@@ -66,7 +66,7 @@ class AnalisaKriteriaController extends Controller
                     $newModel = AnalisaKriteria::findOne([
                 'kriteria_pertama' => $kriteriaKolom,
                 'kriteria_kedua' => $kriteriaBaris,
-              ]);
+            ]);
 
                     if ($newModel == null) {
                         $newModel = new AnalisaKriteria();
@@ -118,9 +118,9 @@ class AnalisaKriteriaController extends Controller
     public function actionAnalisa()
     {
         $query = DataKriteria::find()
-              ->orderBy(['id_kriteria' => SORT_ASC])
-              ->asArray()
-              ->all();
+                ->orderBy(['id_kriteria' => SORT_ASC])
+                ->asArray()
+                ->all();
 
         $inputJumlah = function ($a, $b) {
             return $this->inputJumlah($a, $b);
@@ -156,16 +156,16 @@ class AnalisaKriteriaController extends Controller
 
 
         return $this->render('analisa', [
-          'query' => $query,
-          'inputJumlah' => $inputJumlah,
-          'inputHasil' => $inputHasil,
-          'inputBobot' => $inputBobot,
-          'getTabel' => $getTabel,
-          'jumlahKolom' => $jumlahKolom,
-          'jumlahBaris' => $jumlahBaris,
-          'avg' => $avg,
-          'getIr' => $getIr,
-      ]);
+            'query' => $query,
+            'inputJumlah' => $inputJumlah,
+            'inputHasil' => $inputHasil,
+            'inputBobot' => $inputBobot,
+            'getTabel' => $getTabel,
+            'jumlahKolom' => $jumlahKolom,
+            'jumlahBaris' => $jumlahBaris,
+            'avg' => $avg,
+            'getIr' => $getIr,
+        ]);
     }
 
     public function inputJumlah($a, $b)
@@ -197,12 +197,12 @@ class AnalisaKriteriaController extends Controller
     public function getTabel($a, $b)
     {
         $query = AnalisaKriteria::find()
-              ->where([
+                ->where([
                 'kriteria_pertama' => $a,
                 'kriteria_kedua' => $b,
-              ])
-              ->asArray()
-              ->one();
+                ])
+                ->asArray()
+                ->one();
 
         return $query;
     }
@@ -306,34 +306,34 @@ class AnalisaKriteriaController extends Controller
       //       ->asArray()
       //       ->all();
 
-      $query = DataKriteria::find()
-              ->orderBy(['id_kriteria' => SORT_ASC])
-              ->asArray()
-              ->all();
+        $query = DataKriteria::find()
+                ->orderBy(['id_kriteria' => SORT_ASC])
+                ->asArray()
+                ->all();
 
-      $getTabel = function ($a, $b) {
+        $getTabel = function ($a, $b) {
         return $this->getTabel($a, $b);
-      };
+        };
 
-      $jumlahKolom = function ($a) {
-          return $this->jumlah($a);
-      };
+        $jumlahKolom = function ($a) {
+            return $this->jumlah($a);
+        };
 
-      $avg = function ($a) {
+        $avg = function ($a) {
         return $this->avg($a);
-      };
-      
-      $getIr = function ($n) {
+        };
+        
+        $getIr = function ($n) {
         return $this->getIr($n);
-      };
+        };
 
-      return $this->render('hasil', [
-          'query' => $query,
-          'getTabel' => $getTabel,
-          'jumlahKolom' => $jumlahKolom,
-          'avg' => $avg,
-          'getIr' => $getIr,
-      ]);
+        return $this->render('hasil', [
+            'query' => $query,
+            'getTabel' => $getTabel,
+            'jumlahKolom' => $jumlahKolom,
+            'avg' => $avg,
+            'getIr' => $getIr,
+        ]);
     }
 
     /**

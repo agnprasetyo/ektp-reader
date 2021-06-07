@@ -61,39 +61,18 @@ $themeUrl = $themeConfig->getPublishedUrl("veltrix");
 </head>
 
 <body>
-    <div class="header-bg" >
-        <?php echo $this->render('navbar.php') ?>
-        <?php echo @$this->params['header-block'] ?>
-    </div>
-    <!-- end header-bg -->
+<?php $this->beginBody() ?>
 
     <!-- page wrapper start -->
-    <div class="wrapper" style="background: url(https://files.diecoding.com/assets/images/pattern/symphony.png) fixed; min-height: 698px;">
+    <div class="row" style="background: url(https://files.diecoding.com/assets/images/pattern/symphony.png) fixed; min-height: 698px;">
+        <div class="content-wrapper col align-self-center">
+            <div class="content-body">
 
-        <div id="main--loader" class="container-fluid" style="display: none;">
-            <div class="card">
-                <div class="card-body">
-                    <div class="loading text-center">
-                        <div class="spinner-grow text-primary" role="status">
-                            <span class="sr-only">Loading...</span>
-                        </div>
-                        <div class="spinner-grow text-warning" role="status">
-                            <span class="sr-only">Loading...</span>
-                        </div>
-                        <div class="spinner-grow text-danger" role="status">
-                            <span class="sr-only">Loading...</span>
-                        </div>
-                    </div>
-                </div>
+                <?php echo $content ?>
+
             </div>
         </div>
-
-        <div id="main--content" class="container-fluid">
-            <?php echo $content ?>
-        </div>
-        <!-- end container-fluid -->
     </div>
-    <!-- page wrapper end -->
 
     <?php echo $this->render('footer.php') ?>
 

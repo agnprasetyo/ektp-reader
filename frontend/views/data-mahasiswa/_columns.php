@@ -25,11 +25,16 @@ return [
     ],
     [
         'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'alamat',
+        'attribute'=>'nim',
     ],
     [
         'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'hasil_akhir',
+        'attribute'=>'jurusan',
+    ],
+
+    [
+        'class'=>'\kartik\grid\DataColumn',
+        'attribute'=>'qi',
     ],
     [
         'class' => 'yii\grid\ActionColumn',

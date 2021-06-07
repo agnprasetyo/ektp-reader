@@ -1,5 +1,7 @@
 <?php
 
+use common\models\AnalisaAlternatif;
+use common\models\DataMahasiswa;
 use yii\helpers\Url;
 use yii\helpers\Html;
 
@@ -53,11 +55,11 @@ HTML;
 <div class="--floating-container">
     <div class="--floating-row">
         <?php
-    echo Html::a("Next <i class='fa fa-arrow-right ml-2'></i>", [''], [
-      "class" => "--btn-float btn-primary btn btn-lg",
-      "data-method" => "post",
-    ])
-    ?>
+        echo Html::a("Next <i class='fa fa-arrow-right ml-2'></i>", [''], [
+            "class" => "--btn-float btn-primary btn btn-lg",
+            "data-method" => "post",
+        ])
+        ?>
     </div>
 </div>
 
@@ -85,9 +87,7 @@ $this->registerJs($js);
 
                 <div id="--progress" class="py-4" style="display: none;">
                     <div class="progress">
-                        <div class="progress-bar progress-bar-primary progress-bar-striped progress-bar-animated"
-                            role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"
-                            style="width: 100%;">
+                        <div class="progress-bar progress-bar-primary progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
                             <span class="sr-only">Loading</span>
                         </div>
                     </div>
@@ -99,11 +99,11 @@ $this->registerJs($js);
                             <strong style="font-size:18pt;"><span class="fa fa-table"></span> Alternatif Menurut
                                 Kriteria</strong>
                         </div>
-                        <div class="col-md-6 text-right">
+                        <!-- <div class="col-md-6 text-right">
                             <form method="post">
                                 <button name="hapus" class="btn btn-danger">Hapus Semua Data</button>
                             </form>
-                        </div>
+                        </div> -->
                     </div>
                     <br />
 
@@ -120,87 +120,77 @@ $this->registerJs($js);
 
                         </thead>
                         <tbody>
+                            <?php foreach ($dataMahasiswa as $b => $baris) { ?>
+                                <tr>
+                                    <th class="active"><?= $baris->nama ?></th>
+                                    <td>
+                                        <?php
 
-                            <?php
-              // foreach ($dataMahasiswa as $b) {
-              //   foreach ($dataKriteria as $k) {
-              //       $bobot = $getSkor($b['id'], $k['id_kriteria']);
-              //       $hasil = $bobot['bobot'] * $k['bobot_kriteria'];
-              //
-              //       $normalisasi = $inputNormalisasi($hasil, $b['id'], $k['id_kriteria']);
-              //   }
-              //
-              //   $si = $jumlah($b['id']);
-              //   $satu = $inputSi($si['jumlah'], $b['id']);
-              //
-              //   // $dataMahasiswa[$key]['si'] = $si['jumlah'];
-              //
-              //   $ri = $terbesar($b['id']);
-              //   $dua = $inputRi($ri['max'], $b['id']);
-              // }
-              ?>
+                                        $si = (float) AnalisaAlternatif::find()
+                                            ->where(['id_alternatif' => $baris->id])
+                                            ->sum('normalisasi');
 
-                            <?php foreach ($dataMahasiswa as $key => $baris) { ?>
-                            <tr>
-                                <th class="active"><?= $baris['nama'] ?></th>
-                                <td>
-                                    <?php
-                                        $si = $jumlah($baris['id']);
-                                        $satu = $inputSi($si['jumlah'], $baris['id']);
-                                        echo number_format($si['jumlah'], 4, '.', ',');
+                                        echo number_format($si, 4, '.', ',');
+
                                         ?>
-                                                    </td>
-                                                    <td>
-                                                        <?php
-                                        $ri = $terbesar($baris['id']);
-                                        $dua = $inputRi($ri['max'], $baris['id']);
-                                        echo number_format($ri['max'], 4, '.', ','); ?>
-                                                    </td>
-                                                    <td>
-                                                        <?php
-                                        $maxSi = $utility($baris['id']);
-                                        $maxRi = $regret($baris['id']);
-                                        $minSi = $utility($baris['id']);
-                                        $minRi = $regret($baris['id']);
+                                    </td>
+                                    <td>
+                                        <?php
 
-                                        // echo "Si1 : ";print_r($si['jumlah']);
-                                        // echo " || Si2 : ";print_r($baris['si']);
-                                        // echo " || MinSi : ";print_r($minSi['smallest']);
-                                        // echo " || MaxSi : ";print_r($maxSi['largest']);
-                                        //
-                                        // echo " || Ri : ";print_r($ri['max']);
-                                        // echo " || MinRi : ";print_r($minRi['smallest']);
-                                        // echo " || MaxRi : ";print_r($maxRi['largest']);
-                                        // exit;
+                                        $ri = (float) AnalisaAlternatif::find()
+                                            ->where(['id_alternatif' => $baris->id])
+                                            ->max('normalisasi');
 
-                                        $qi = (0.5 * (($baris['si'] - $minSi['smallest']) / ($maxSi['largest'] - $minSi['smallest']))) + ((1 - 0.5) * (($ri['max'] - $minRi['smallest']) / ($maxRi['largest'] - $minRi['smallest'])));
+                                        echo number_format($ri, 4, '.', ',');
 
-                                        $qii = (0.45 * (($si['jumlah'] - $minSi['smallest']) / ($maxSi['largest'] - $minSi['smallest']))) + ((1 - 0.45) * (($ri['max'] - $minRi['smallest']) / ($maxRi['largest'] - $minRi['smallest'])));
-                                        $qiii = (0.55 * (($si['jumlah'] - $minSi['smallest']) / ($maxSi['largest'] - $minSi['smallest']))) + ((1 - 0.55) * (($ri['max'] - $minRi['smallest']) / ($maxRi['largest'] - $minRi['smallest'])));
+                                        ?>
+                                    </td>
+                                    <td>
+                                        <?php
+
+                                        $maxSi = (float) DataMahasiswa::find()->max('si');
+                                        $maxRi = (float) DataMahasiswa::find()->max('ri');
+                                        $minSi = (float) DataMahasiswa::find()->min('si');
+                                        $minRi = (float) DataMahasiswa::find()->min('ri');
+
+                                        $qi = $qii = $qiii = 0;
+                                        if ($maxSi != $minSi && $maxRi != $minRi) {
+                                            $qi = (0.5 * (($si - $minSi) / ($maxSi - $minSi))) + ((1 - 0.5) * (($ri - $minRi) / ($maxRi - $minRi)));
+
+                                            $qii = (0.45 * (($si - $minSi) / ($maxSi - $minSi))) + ((1 - 0.45) * (($ri - $minRi) / ($maxRi - $minRi)));
+
+                                            $qiii = (0.55 * (($si - $minSi) / ($maxSi - $minSi))) + ((1 - 0.55) * (($ri - $minRi) / ($maxRi - $minRi)));
+                                        }
                                         echo number_format($qi, 4, '.', ',');
 
-                                        $tiga = $inputQi($qi, $qii, $qiii, $baris['id']);
-                                    ?>
-                                </td>
-                                <td><?= number_format($qii, 4, '.', ','); ?></td>
-                                <td><?= number_format($qiii, 4, '.', ','); ?></td>
-                            </tr>
+                                        $baris->updateAttributes([
+                                            'si' => $si,
+                                            'ri' => $ri,
+                                            'qi' => $qi,
+                                            'qii' => $qii,
+                                            'qiii' => $qiii,
+                                        ]);
+                                        ?>
+                                    </td>
+                                    <td><?= number_format($qii, 4, '.', ','); ?></td>
+                                    <td><?= number_format($qiii, 4, '.', ','); ?></td>
+                                </tr>
                             <?php } ?>
                         </tbody>
 
                         <tfoot>
                             <tr class="info">
                                 <th>Maksimal</th>
-                                <td><?= number_format($maxSi['largest'], 4, '.', ','); ?></td>
-                                <td><?= number_format($maxRi['largest'], 4, '.', ','); ?></td>
+                                <td><?= number_format($maxSi, 4, '.', ','); ?></td>
+                                <td><?= number_format($maxRi, 4, '.', ','); ?></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
                             </tr>
                             <tr class="info">
                                 <th>Minimal</th>
-                                <td><?= number_format($minSi['smallest'], 4, '.', ','); ?></td>
-                                <td><?= number_format($minRi['smallest'], 4, '.', ','); ?></td>
+                                <td><?= number_format($minSi, 4, '.', ','); ?></td>
+                                <td><?= number_format($minRi, 4, '.', ','); ?></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>

@@ -79,7 +79,7 @@ HTML;
                     </div>
 
                     <div class="form-group mt-4 mb-0 text-right">
-                        <hr class="my-4">
+                        <!-- <hr class="my-4"> -->
                         <?php echo Html::submitButton('<i class="mdi mdi-content-save-move"></i> ' . Yii::t("app", "Simpan Data"), ['class' => 'btn btn-primary btn-icon']) ?>
                     </div>
 

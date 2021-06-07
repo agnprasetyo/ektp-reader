@@ -43,7 +43,7 @@ use common\models\AuthAssign;
                     <li class="has-submenu">
                         <a href="#">
                             <i class="mdi mdi-cogs"></i>
-                            For Development
+                            Setting
                             <i class="mdi mdi-chevron-down mdi-drop"></i>
                         </a>
                         <ul class="submenu">

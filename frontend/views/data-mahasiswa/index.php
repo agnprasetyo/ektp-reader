@@ -56,13 +56,13 @@ HTML;
         <div class="card">
             <div class="card-body">
 
-              <?= GridView::widget([
-                  'dataProvider' => $dataProvider,
-                  'filterModel' => $searchModel,
-                  'columns' => require '_columns.php',
-              ]); ?>
+                <?= GridView::widget([
+                    'dataProvider' => $dataProvider,
+                    'filterModel' => $searchModel,
+                    'columns' => require '_columns.php',
+                ]); ?>
 
-          </div>
-      </div>
-  </div>
+            </div>
+        </div>
+    </div>
 </div>

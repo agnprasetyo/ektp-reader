@@ -20,30 +20,6 @@ $fieldOptions2 = [
     'inputTemplate' => "{input}<span class='glyphicon glyphicon-lock form-control-feedback'></span>"
 ];
 
-$jk = Yii::$app->request->get('jk');
-$uHome = Url::base(true);
-$uCreate = Url::toRoute(['create', 'jk' => Yii::$app->request->get('jk')]);
-
-$this->params['header-block'] = <<< HTML
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="page-title-box">
-                <div class="row align-items-center">
-                    <div class="col-sm-12">
-                        <h4 class="page-title">{$this->title}</h4>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{$uHome}"><i class="mdi mdi-home-outline"></i></a></li>
-                            <li class="breadcrumb-item active">{$this->title}</li>
-                        </ol>
-                    </div>
-                </div> <!-- end row-->
-            </div>
-            <!-- end page title -->
-        </div> <!-- end col -->
-    </div> <!-- end row-->
-</div>
-HTML;
 ?>
 
 <div class="row justify-content-center">

@@ -57,11 +57,11 @@ HTML;
           			<div class="col-md-6 text-left">
           				<strong style="font-size:18pt;"><span class="fa fa-table"></span> Perbandingan Kriteria</strong>
           			</div>
-          			<div class="col-md-6 text-right">
+          			<!-- <div class="col-md-6 text-right">
           				<form method="post">
                     <button name="hapus" class="btn btn-danger">Hapus Semua Data</button>
           				</form>
-          			</div>
+          			</div> -->
           		</div>
           		<br/>
           		<table width="100%" class="table table-striped table-bordered">

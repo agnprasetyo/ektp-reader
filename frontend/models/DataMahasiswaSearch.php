@@ -19,6 +19,7 @@ class DataMahasiswaSearch extends DataMahasiswa
         return [
             [['id', 'nama', 'alamat', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'agama', 'status', 'pekerjaan', 'berlaku_hingga', 'nim', 'jenjang', 'jurusan', 'fakultas', 'status_mhs'], 'safe'],
             [['nik'], 'integer'],
+            [['qi'], 'number'],
         ];
     }
 
@@ -75,7 +76,8 @@ class DataMahasiswaSearch extends DataMahasiswa
             ->andFilterWhere(['like', 'jenjang', $this->jenjang])
             ->andFilterWhere(['like', 'jurusan', $this->jurusan])
             ->andFilterWhere(['like', 'fakultas', $this->fakultas])
-            ->andFilterWhere(['like', 'status_mhs', $this->status_mhs]);
+            ->andFilterWhere(['like', 'status_mhs', $this->status_mhs])
+            ->andFilterWhere(['like', 'qi', $this->qi]);
 
         return $dataProvider;
     }

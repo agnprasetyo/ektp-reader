@@ -63,9 +63,7 @@ HTML;
 
 
 <?php
-
 $js = <<< JS
-
 		$(".--floating-container").show();
 
 		$(".--floating-container").click(function () {
@@ -75,7 +73,6 @@ $js = <<< JS
 		});
 JS;
 $this->registerJs($js);
-
 ?>
 
 <div class="row">
@@ -90,7 +87,7 @@ $this->registerJs($js);
 							<span class="sr-only">Loading</span>
 						</div>
 					</div>
-                </div>
+				</div>
 
 				<div id="--content">
 					<div class="row">
@@ -98,28 +95,28 @@ $this->registerJs($js);
 							<strong style="font-size:18pt;"><span class="fa fa-table"></span> Alternatif Menurut
 								Kriteria</strong>
 						</div>
-						<div class="col-md-6 text-right">
+						<!-- <div class="col-md-6 text-right">
 							<form method="post">
 								<button name="hapus" class="btn btn-danger">Hapus Semua Data</button>
 							</form>
-						</div>
+						</div> -->
 					</div>
 					<br />
 
 					<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
 						<li class="nav-item">
-							<a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Table 1</a>
+							<a class="nav-link active" id="pills-satu-tab" data-toggle="pill" href="#pills-satu" role="tab" aria-controls="pills-satu" aria-selected="true">Matriks Normalisasi</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Table 2</a>
+							<a class="nav-link" id="pills-dua-tab" data-toggle="pill" href="#pills-dua" role="tab" aria-controls="pills-dua" aria-selected="false">Matriks Normalisasi*Bobot</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">Table 3</a>
+							<a class="nav-link" id="pills-tiga-tab" data-toggle="pill" href="#pills-tiga" role="tab" aria-controls="pills-tiga" aria-selected="false">Matriks</a>
 						</li>
 					</ul>
 
 					<div class="tab-content" id="pills-tabContent">
-						<div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+						<div class="tab-pane fade show active" id="pills-satu" role="tabpanel" aria-labelledby="pills-satu-tab">
 							<table width="100%" class="table table-striped table-bordered">
 								<thead>
 									<tr>
@@ -163,21 +160,26 @@ $this->registerJs($js);
 														'id_kriteria' => $kolom->id_kriteria,
 													]);
 
-													$normal = 0;
+													$normal = $hasil = 0;
 													if ($max != $min) {
 														$normal = ($max - (float) $skor->nilai) / ($max - $min);
 													}
 													echo number_format($normal, 4, '.', ',');
-													$skor->updateAttributes(['bobot' => $normal]);
 
+													if ($skor) {
 
-													// =================================================
-													$hasil = (float) $skor->bobot * (float) $kolom->bobot_kriteria;
-													$skor->updateAttributes(['normalisasi' => $hasil]);
+														$hasil = (float) $skor->bobot * (float) $kolom->bobot_kriteria;
+														$skor->updateAttributes([
+															'normalisasi' => $hasil,
+															'bobot' => $normal,
+														]);
+													}
 
 													$table2 .= "<td>";
 													$table2 .= number_format($hasil, 4, '.', ',');
 													$table2 .= "</td>";
+
+
 
 													?>
 												</td>
@@ -190,7 +192,7 @@ $this->registerJs($js);
 								</tbody>
 							</table>
 						</div>
-						<div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+						<div class="tab-pane fade" id="pills-dua" role="tabpanel" aria-labelledby="pills-dua-tab">
 							<table width="100%" class="table table-striped table-bordered">
 								<thead>
 									<tr>
@@ -203,11 +205,11 @@ $this->registerJs($js);
 								</tbody>
 							</table>
 						</div>
-						<div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+						<div class="tab-pane fade" id="pills-tiga" role="tabpanel" aria-labelledby="pills-tiga-tab">
 							....
 						</div>
 					</div>
-				
+
 				</div>
 
 			</div>

@@ -2,6 +2,8 @@
 
 /* @var $this yii\web\View */
 
+use yii\helpers\Url;
+
 $this->title = 'Profil';
 $home = Yii::$app->homeUrl;
 
@@ -30,17 +32,25 @@ HTML;
         <div class="card-deck-wrapper">
             <div class="card-deck">
                 <div class="card col-md-3 p-2">
-                  FOTO
+                    <img src="<?php echo Url::base(true) ?>/images/og.png" alt="" style="margin: auto; width: 50%; ">
                 </div>
                 <div class="card col-md-9">
                     <div class="card-body">
-                        <label for="url">URL PORT</label>
+                        <label for="url">NAMA :</label>
                         <p>
-                          <?= $tools->serial ?>
+                            <?= $datauser->username ?>
                         </p>
-                        <label for="url">NAMA</label>
+                        <label for="url">URL PORT :</label>
                         <p>
-                          <?= $datauser->username ?>
+                            <?= $tools->port ?>
+                        </p>
+                        <label for="url">SERIAL ALAT:</label>
+                        <p>
+                            <?= $tools->serial ?>
+                        </p>
+                        <label for="url">TEMPAT ALAT:</label>
+                        <p>
+                            <?= $tools->tempat ?>
                         </p>
 
 
